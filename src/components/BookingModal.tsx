@@ -107,7 +107,7 @@ export default function BookingModal({ program, isOpen, onClose }: BookingModalP
             </div>
 
             {/* Reference Number Badge */}
-            <div className="p-4 rounded-xl bg-muted-bg border border-card-border space-y-1">
+            <div data-testid="ref-badge" className="p-4 rounded-xl bg-muted-bg border border-card-border space-y-1">
               <span className="text-[10px] uppercase font-bold text-muted-text block">الرقم المرجعي للحجز</span>
               <span className="text-2xl font-black text-primary tracking-widest block">{successData.refNumber}</span>
             </div>

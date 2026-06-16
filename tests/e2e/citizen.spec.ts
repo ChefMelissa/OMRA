@@ -24,7 +24,7 @@ test.describe('Citizen Flow E2E Tests', () => {
     await compareBtn.click()
 
     // Floating comparison drawer should be visible at the bottom
-    const compareDrawer = page.locator('div:has-text("مقارنة برامج العمرة")')
+    const compareDrawer = page.locator('[data-testid="compare-drawer"]')
     await expect(compareDrawer).toBeVisible()
 
     // Add a second program card to compare
@@ -44,8 +44,8 @@ test.describe('Citizen Flow E2E Tests', () => {
       await expect(page).toHaveURL(/\/compare\?ids=/)
       await expect(page.locator('h1')).toContainText('مقارنة برامج العمرة')
 
-      // Return to homepage using the "العودة للبحث" button
-      await page.locator('button:has-text("العودة للبحث")').click()
+      // Return to homepage using the "العودة للبحث" link
+      await page.locator('a:has-text("العودة للبحث")').click()
       await expect(page).toHaveURL('/')
     }
 
@@ -60,7 +60,7 @@ test.describe('Citizen Flow E2E Tests', () => {
     await bookNowBtn.click()
 
     // Modal should appear
-    const modalHeader = page.locator('h3:has-text("طلب الحجز المجاني")')
+    const modalHeader = page.locator('span:has-text("طلب الحجز المجاني")')
     await expect(modalHeader).toBeVisible()
 
     // Fill in the form
@@ -76,7 +76,7 @@ test.describe('Citizen Flow E2E Tests', () => {
     await expect(successHeader).toBeVisible()
 
     // Reference number should be displayed
-    const refContainer = page.locator('div:has-text("الرقم المرجعي للحجز")')
+    const refContainer = page.locator('[data-testid="ref-badge"]')
     await expect(refContainer).toBeVisible()
     const refText = await refContainer.locator('span.text-2xl').textContent()
     expect(refText).toMatch(/UMR-[A-Z0-9]{6}/)

@@ -13,48 +13,50 @@ export default async function AgencyDashboardPage() {
 
   if (!user) return null
 
-  // 1. Fetch Stats
-  const { count: programsCount } = await supabase
-    .from('programs')
-    .select('*', { count: 'exact', head: true })
-    .eq('agency_id', user.id)
-
-  const { data: bookings } = await supabase
-    .from('booking_requests')
-    .select('status, booking_value')
-    .eq('agency_id', user.id)
+  // Fetch stats, unpaid commissions, and recent bookings in parallel
+  const [
+    { count: programsCount },
+    { data: bookings },
+    { data: settlements },
+    { data: recentBookings }
+  ] = await Promise.all([
+    supabase
+      .from('programs')
+      .select('*', { count: 'exact', head: true })
+      .eq('agency_id', user.id),
+    supabase
+      .from('booking_requests')
+      .select('status, booking_value')
+      .eq('agency_id', user.id),
+    supabase
+      .from('commission_settlements')
+      .select('total_commission')
+      .eq('agency_id', user.id)
+      .eq('status', 'unpaid'),
+    supabase
+      .from('booking_requests')
+      .select(`
+        id,
+        reference_number,
+        customer_name,
+        customer_phone,
+        is_whatsapp,
+        room_type,
+        status,
+        created_at,
+        programs (
+          title
+        )
+      `)
+      .eq('agency_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(5)
+  ])
 
   const totalBookingsCount = bookings?.length || 0
   const confirmedBookingsCount = bookings?.filter(b => b.status === 'booked').length || 0
-
-  // 2. Fetch Unpaid Commissions
-  const { data: settlements } = await supabase
-    .from('commission_settlements')
-    .select('total_commission')
-    .eq('agency_id', user.id)
-    .eq('status', 'unpaid')
-
   const unpaidCommissionSum = settlements?.reduce((sum, s) => sum + Number(s.total_commission), 0) || 0
 
-  // 3. Fetch Recent Bookings
-  const { data: recentBookings } = await supabase
-    .from('booking_requests')
-    .select(`
-      id,
-      reference_number,
-      customer_name,
-      customer_phone,
-      is_whatsapp,
-      room_type,
-      status,
-      created_at,
-      programs (
-        title
-      )
-    `)
-    .eq('agency_id', user.id)
-    .order('created_at', { ascending: false })
-    .limit(5)
 
   return (
     <div className="space-y-8 animate-fade-in">

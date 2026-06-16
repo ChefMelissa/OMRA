@@ -364,3 +364,22 @@ create policy "Admin full access on inquiries" on public.inquiries for all to au
 
 create policy "Admin full access on edit_requests" on public.edit_requests for all to authenticated
     using (exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'));
+
+
+-- ========================================================
+-- Query Performance Indexes
+-- ========================================================
+
+-- Indexes for frequently joined/filtered foreign keys
+create index if not exists idx_programs_agency_id on public.programs(agency_id);
+create index if not exists idx_programs_status on public.programs(status);
+create index if not exists idx_program_hotels_program_id on public.program_hotels(program_id);
+create index if not exists idx_program_room_prices_program_id on public.program_room_prices(program_id);
+create index if not exists idx_program_inclusions_program_id on public.program_inclusions(program_id);
+create index if not exists idx_booking_requests_agency_id on public.booking_requests(agency_id);
+create index if not exists idx_booking_requests_program_id on public.booking_requests(program_id);
+create index if not exists idx_booking_requests_status on public.booking_requests(status);
+create index if not exists idx_commission_settlements_agency_id on public.commission_settlements(agency_id);
+create index if not exists idx_inquiries_program_id on public.inquiries(program_id);
+create index if not exists idx_edit_requests_program_id on public.edit_requests(program_id);
+

@@ -14,7 +14,7 @@ test.describe('Admin Flow E2E Tests', () => {
 
     // 3. Verify landing on the Admin Dashboard
     await expect(page).toHaveURL(/\/admin\/dashboard/)
-    await expect(page.locator('h1')).toContainText('لوحة تحكم المشرف')
+    await expect(page.locator('h1')).toContainText('لوحة تحكم المنصة العامة')
 
     // 4. Navigate to Agencies management
     await page.goto('/admin/agencies')
@@ -24,12 +24,12 @@ test.describe('Admin Flow E2E Tests', () => {
     // 5. Navigate to Bookings management
     await page.goto('/admin/bookings')
     await expect(page).toHaveURL(/\/admin\/bookings/)
-    await expect(page.locator('h1')).toContainText('سجل طلبات الحجز العام')
+    await expect(page.locator('h1')).toContainText('طلبات حجز وتأكيدات العمولة')
 
     // 6. Navigate to Commission Settlements
     await page.goto('/admin/settlements')
     await expect(page).toHaveURL(/\/admin\/settlements/)
-    await expect(page.locator('h1')).toContainText('تسويات عمولات الوكالات')
+    await expect(page.locator('h1')).toContainText('تسويات وفواتير العمولات')
 
     // 7. Log out
     const logoutBtn = page.locator('button:has-text("تسجيل الخروج")')

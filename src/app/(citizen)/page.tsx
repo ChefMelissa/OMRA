@@ -7,26 +7,30 @@ export const dynamic = 'force-dynamic'
 export default async function HomePage() {
   const supabase = createClient()
 
-  // Fetch active programs with relations
-  const { data: programs } = await supabase
-    .from('programs')
-    .select(`
-      *,
-      hotels:program_hotels(*),
-      room_prices:program_room_prices(*),
-      agency:agencies(*)
-    `)
-    .eq('status', 'active')
-    .order('departure_date', { ascending: true })
+  // Fetch active programs and approved agency count in parallel
+  const [
+    { data: programs },
+    { count: agencyCount }
+  ] = await Promise.all([
+    supabase
+      .from('programs')
+      .select(`
+        *,
+        hotels:program_hotels(*),
+        room_prices:program_room_prices(*),
+        agency:agencies(*)
+      `)
+      .eq('status', 'active')
+      .order('departure_date', { ascending: true }),
+    supabase
+      .from('agencies')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'approved')
+  ])
 
   // Only programs of approved agencies
   const approvedPrograms = programs?.filter(p => p.agency && p.agency.status === 'approved') || []
 
-  // Gather stats for trust section
-  const { count: agencyCount } = await supabase
-    .from('agencies')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'approved')
 
   return (
     <div className="space-y-12 animate-fade-in">

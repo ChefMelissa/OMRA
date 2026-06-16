@@ -141,6 +141,10 @@ export default function CitizenProgramSearch({ initialPrograms }: CitizenProgram
     // Load favorites from local storage
     const savedFavs = localStorage.getItem('omra_favorites')
     if (savedFavs) setFavorites(JSON.parse(savedFavs))
+
+    // Load compareList from local storage
+    const savedCompare = localStorage.getItem('omra_compare')
+    if (savedCompare) setCompareList(JSON.parse(savedCompare))
   }, [])
 
   const toggleFavorite = (id: string, e: React.MouseEvent) => {
@@ -157,15 +161,18 @@ export default function CitizenProgramSearch({ initialPrograms }: CitizenProgram
     e.preventDefault()
     e.stopPropagation()
     const isAlreadyIn = compareList.some(x => x.id === program.id)
+    let updated = []
     if (isAlreadyIn) {
-      setCompareList(prev => prev.filter(x => x.id !== program.id))
+      updated = compareList.filter(x => x.id !== program.id)
     } else {
       if (compareList.length >= 4) {
         alert('يمكنك مقارنة 4 برامج كحد أقصى في وقت واحد.')
         return
       }
-      setCompareList(prev => [...prev, program])
+      updated = [...compareList, program]
     }
+    setCompareList(updated)
+    localStorage.setItem('omra_compare', JSON.stringify(updated))
   }
 
   // Extract unique airlines & cities
@@ -753,7 +760,7 @@ export default function CitizenProgramSearch({ initialPrograms }: CitizenProgram
 
       {/* Floating Comparison Drawer */}
       {compareList.length > 0 && (
-        <div className="fixed bottom-6 inset-x-6 z-40 bg-card border border-primary/20 shadow-2xl p-5 rounded-2xl max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 animate-fade-in">
+        <div data-testid="compare-drawer" className="fixed bottom-6 inset-x-6 z-40 bg-card border border-primary/20 shadow-2xl p-5 rounded-2xl max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 animate-fade-in">
           <div className="space-y-1 text-center sm:text-right">
             <h4 className="font-extrabold text-sm text-foreground">مقارنة برامج العمرة ({compareList.length})</h4>
             <p className="text-xs text-muted-text">لقد اخترت برامج للمقارنة. قارن الفنادق والمسافات والأسعار جنباً إلى جنب.</p>
@@ -780,7 +787,10 @@ export default function CitizenProgramSearch({ initialPrograms }: CitizenProgram
               </button>
             </Link>
             <button 
-              onClick={() => setCompareList([])}
+              onClick={() => {
+                setCompareList([])
+                localStorage.removeItem('omra_compare')
+              }}
               className="py-2.5 px-3 border border-card-border text-muted-text hover:text-foreground text-xs font-bold rounded-xl bg-card"
             >
               إلغاء

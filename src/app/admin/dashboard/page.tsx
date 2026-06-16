@@ -10,28 +10,41 @@ export const dynamic = 'force-dynamic'
 export default async function AdminDashboardPage() {
   const supabase = createClient()
 
-  // 1. Fetch Agencies stats
-  const { data: agencies } = await supabase
-    .from('agencies')
-    .select('id, status, commission_rate')
+  // Fetch stats, bookings, settlements, and pending agencies in parallel
+  const [
+    { data: agencies },
+    { count: activePrograms },
+    { data: bookings },
+    { data: settlements },
+    { data: pendingAgenciesList }
+  ] = await Promise.all([
+    supabase
+      .from('agencies')
+      .select('id, status, commission_rate'),
+    supabase
+      .from('programs')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'active'),
+    supabase
+      .from('booking_requests')
+      .select(`
+        *,
+        agency:agencies(commission_rate)
+      `),
+    supabase
+      .from('commission_settlements')
+      .select('total_commission, status'),
+    supabase
+      .from('agencies')
+      .select('*')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false })
+      .limit(3)
+  ])
 
   const totalAgencies = agencies?.length || 0
   const pendingAgencies = agencies?.filter(a => a.status === 'pending').length || 0
   const approvedAgencies = agencies?.filter(a => a.status === 'approved').length || 0
-
-  // 2. Fetch Programs stats
-  const { count: activePrograms } = await supabase
-    .from('programs')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'active')
-
-  // 3. Fetch Bookings stats
-  const { data: bookings } = await supabase
-    .from('booking_requests')
-    .select(`
-      *,
-      agency:agencies(commission_rate)
-    `)
 
   const totalBookings = bookings?.length || 0
   const bookedRequests = bookings?.filter(b => b.status === 'booked') || []
@@ -52,20 +65,8 @@ export default async function AdminDashboardPage() {
     }
   })
 
-  // 4. Fetch Settlements stats
-  const { data: settlements } = await supabase
-    .from('commission_settlements')
-    .select('total_commission, status')
-
   const unpaidCommission = settlements?.filter(s => s.status === 'unpaid').reduce((sum, s) => sum + Number(s.total_commission), 0) || 0
 
-  // 5. Fetch Pending Agencies list
-  const { data: pendingAgenciesList } = await supabase
-    .from('agencies')
-    .select('*')
-    .eq('status', 'pending')
-    .order('created_at', { ascending: false })
-    .limit(3)
 
   return (
     <div className="space-y-8 animate-fade-in">

@@ -17,10 +17,10 @@ test.describe('Agency Flow E2E Tests', () => {
 
     // 3. Verify landing on the Agency Dashboard
     await expect(page).toHaveURL(/\/agency\/dashboard/)
-    await expect(page.locator('h1')).toContainText('لوحة تحكم الوكالة')
+    await expect(page.locator('h1')).toContainText('نظرة عامة على الوكالة')
 
     // Confirm that stats or welcome message is loaded
-    await expect(page.locator('h2')).toContainText('وكالة الأنوار للأسفار والخدمات')
+    await expect(page.locator('aside')).toContainText('وكالة الأنوار للأسفار والخدمات')
 
     // 4. Navigate to Programs list
     await page.goto('/agency/programs')
@@ -36,7 +36,7 @@ test.describe('Agency Flow E2E Tests', () => {
     // 5. Navigate to Profile page
     await page.goto('/agency/profile')
     await expect(page).toHaveURL(/\/agency\/profile/)
-    await expect(page.locator('h1')).toContainText('إعدادات الملف الشخصي للوكالة')
+    await expect(page.locator('h1')).toContainText('بيانات الوكالة السياحية')
 
     // Verify profile inputs are pre-filled with agency details
     const nameInput = page.locator('input[name="name"]')
