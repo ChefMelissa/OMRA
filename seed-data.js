@@ -217,9 +217,9 @@ async function runSeed() {
         { city: 'المدينة', hotel_name: 'فندق منازل المهاجرين', stars: 3, distance_meters: 250, nights: 4, board_basis: 'فطور الصباح' }
       ],
       prices: [
-        { room_type: 'ثنائية', price: 215000 },
-        { room_type: 'ثلاثية', price: 195000 },
-        { room_type: 'رباعية', price: 175000 }
+        { room_type: 'ثنائية', price: 215000, commission: 5000 },
+        { room_type: 'ثلاثية', price: 195000, commission: 4000 },
+        { room_type: 'رباعية', price: 175000, commission: 3000 }
       ],
       inclusions: ['تأشيرة العمرة', 'تذاكر الطيران ذهاب وإياب', 'النقل بحافلات حديثة ومكيفة', 'المزارات بالمدينة المنورة']
     },
@@ -239,9 +239,9 @@ async function runSeed() {
         { city: 'المدينة', hotel_name: 'فندق دار الإيمان إنتركونتيننتال', stars: 5, distance_meters: 50, nights: 3, board_basis: 'فطور الصباح' }
       ],
       prices: [
-        { room_type: 'ثنائية', price: 420000 },
-        { room_type: 'ثلاثية', price: 380000 },
-        { room_type: 'رباعية', price: 340000 }
+        { room_type: 'ثنائية', price: 420000, commission: 10000 },
+        { room_type: 'ثلاثية', price: 380000, commission: 8000 },
+        { room_type: 'رباعية', price: 340000, commission: 6000 }
       ],
       inclusions: ['تأشيرة العمرة VIP', 'تذاكر الطيران (الجزائر - جدة - المدينة - الجزائر)', 'النقل بسيارات خاصة VIP', 'المزارات والإرشاد الديني', 'بوفيه مفتوح فطور الصباح']
     },
@@ -263,9 +263,9 @@ async function runSeed() {
         { city: 'المدينة', hotel_name: 'فندق ديار المدينة', stars: 3, distance_meters: 200, nights: 4, board_basis: 'فطور الصباح' }
       ],
       prices: [
-        { room_type: 'ثنائية', price: 230000 },
-        { room_type: 'ثلاثية', price: 210000 },
-        { room_type: 'رباعية', price: 190000 }
+        { room_type: 'ثنائية', price: 230000, commission: 5500 },
+        { room_type: 'ثلاثية', price: 210000, commission: 4500 },
+        { room_type: 'رباعية', price: 190000, commission: 3500 }
       ],
       inclusions: ['التأشيرة السياحية للتنقل', 'تذكرة الطيران المباشر من وهران', 'التأطير الطبي والإرشاد الفقهي لمناسك العمرة', 'النقل بحافلات مرسيدس مريحة']
     },
@@ -285,9 +285,9 @@ async function runSeed() {
         { city: 'المدينة', hotel_name: 'فندق المركزية الذهبي', stars: 4, distance_meters: 150, nights: 5, board_basis: 'نصف إقامة' }
       ],
       prices: [
-        { room_type: 'ثنائية', price: 310000 },
-        { room_type: 'ثلاثية', price: 280000 },
-        { room_type: 'رباعية', price: 250000 }
+        { room_type: 'ثنائية', price: 310000, commission: 7000 },
+        { room_type: 'ثلاثية', price: 280000, commission: 6000 },
+        { room_type: 'رباعية', price: 250000, commission: 5000 }
       ],
       inclusions: ['تأشيرة الدخول الإلكترونية سريعة الإجراء', 'تذكرة الطيران غير المباشر عبر إسطنبول', 'النقل الكامل المريح', 'وجبتي فطور الصباح وعشاء بوفيه مفتوح', 'زيارة الأماكن التاريخية والمقدسة في مكة والمدينة']
     },
@@ -309,9 +309,9 @@ async function runSeed() {
         { city: 'المدينة', hotel_name: 'فندق الشرفات الذهبية', stars: 3, distance_meters: 300, nights: 4, board_basis: 'بدون وجبات' }
       ],
       prices: [
-        { room_type: 'ثنائية', price: 250000 },
-        { room_type: 'ثلاثية', price: 225000 },
-        { room_type: 'رباعية', price: 205000 }
+        { room_type: 'ثنائية', price: 250000, commission: 6000 },
+        { room_type: 'ثلاثية', price: 225000, commission: 5000 },
+        { room_type: 'رباعية', price: 205000, commission: 4000 }
       ],
       inclusions: ['التأشيرة والتأمين الطبي الشامل للكورونا والحوادث', 'تذكرة طيران الخطوط السعودية المباشرة', 'توصيل مجاني للحرم 24 ساعة حافلات التردد المفتوح', 'المزارات والمحاضرات الدينية التثقيفية للرجال والنساء']
     },
@@ -331,9 +331,9 @@ async function runSeed() {
         { city: 'المدينة', hotel_name: 'فندق دلة طيبة', stars: 4, distance_meters: 100, nights: 5, board_basis: 'فطور الصباح' }
       ],
       prices: [
-        { room_type: 'ثنائية', price: 380000 },
-        { room_type: 'ثلاثية', price: 345000 },
-        { room_type: 'رباعية', price: 315000 }
+        { room_type: 'ثنائية', price: 380000, commission: 9000 },
+        { room_type: 'ثلاثية', price: 345000, commission: 8000 },
+        { room_type: 'رباعية', price: 315000, commission: 7000 }
       ],
       inclusions: ['التأشيرة وبطاقة الحجز الإلكتروني', 'طيران مباشر مع طيران الجزائر', 'فطور بوفيه فاخر بالفنادق المذكورة', 'النقل بحافلات لكزس 2025 مكيفة وكاملة الخدمات']
     },
@@ -355,9 +355,9 @@ async function runSeed() {
         { city: 'المدينة', hotel_name: 'فندق دار السلام الجديد', stars: 3, distance_meters: 280, nights: 4, board_basis: 'بدون وجبات' }
       ],
       prices: [
-        { room_type: 'ثنائية', price: 198000 },
-        { room_type: 'ثلاثية', price: 182000 },
-        { room_type: 'رباعية', price: 168000 }
+        { room_type: 'ثنائية', price: 198000, commission: 4500 },
+        { room_type: 'ثلاثية', price: 182000, commission: 3500 },
+        { room_type: 'رباعية', price: 168000, commission: 2500 }
       ],
       inclusions: ['استخراج تأشيرة العمرة وتغطية تأمينية كاملة', 'تذاكر طيران رحلة الخطوط التركية', 'توزيع مياه زمزم وهدايا تذكارية للمعتمرين']
     },
@@ -377,9 +377,9 @@ async function runSeed() {
         { city: 'المدينة', hotel_name: 'فندق الأوبروي المدينة', stars: 5, distance_meters: 50, nights: 3, board_basis: 'إقامة كاملة' }
       ],
       prices: [
-        { room_type: 'ثنائية', price: 460000 },
-        { room_type: 'ثلاثية', price: 420000 },
-        { room_type: 'رباعية', price: 390000 }
+        { room_type: 'ثنائية', price: 460000, commission: 12000 },
+        { room_type: 'ثلاثية', price: 420000, commission: 10000 },
+        { room_type: 'رباعية', price: 390000, commission: 8000 }
       ],
       inclusions: ['التأشيرات السريعة والخدمات المميزة في المطارات', 'تذكرة الطيران المباشرة درجة سياحية أولى', 'فطور غداء وعشاء بوفيه مفتوح بالفندقين', 'النقل الحصري بسيارات الكامري والجمس الحديثة للوكالة']
     },
@@ -401,10 +401,10 @@ async function runSeed() {
         { city: 'المدينة', hotel_name: 'فندق ريحانة السكينة', stars: 3, distance_meters: 300, nights: 3, board_basis: 'بدون وجبات' }
       ],
       prices: [
-        { room_type: 'ثنائية', price: 189000 },
-        { room_type: 'ثلاثية', price: 174000 },
-        { room_type: 'رباعية', price: 159000 },
-        { room_type: 'خماسية', price: 149000 }
+        { room_type: 'ثنائية', price: 189000, commission: 4000 },
+        { room_type: 'ثلاثية', price: 174000, commission: 3000 },
+        { room_type: 'رباعية', price: 159000, commission: 2000 },
+        { room_type: 'خماسية', price: 149000, commission: 1000 }
       ],
       inclusions: ['التأشيرة وبطاقة المعتمر الرسمية', 'تذاكر طيران الخطوط الجوية الجزائرية مباشر', 'مرافقة دينية وطبية طيلة الرحلة', 'زيارة غار حراء وغار ثور والمشاعر المقدسة بالباص']
     },
@@ -424,9 +424,9 @@ async function runSeed() {
         { city: 'المدينة', hotel_name: 'فندق طابة السلام', stars: 4, distance_meters: 220, nights: 4, board_basis: 'فطور الصباح' }
       ],
       prices: [
-        { room_type: 'ثنائية', price: 245000 },
-        { room_type: 'ثلاثية', price: 225000 },
-        { room_type: 'رباعية', price: 205000 }
+        { room_type: 'ثنائية', price: 245000, commission: 6000 },
+        { room_type: 'ثلاثية', price: 225000, commission: 5000 },
+        { room_type: 'رباعية', price: 205000, commission: 4000 }
       ],
       inclusions: ['تأشيرة الدخول الإلكترونية والتأمين الشامل', 'تذاكر السفر طائرة مباشرة ذهاب وإياب', 'النقل الخاص بالوكالة', 'المزارات المعتادة وجولة سياحية لأبرز معالم المدينة المنورة']
     }
@@ -493,7 +493,8 @@ async function runSeed() {
         .insert({
           program_id: programId,
           room_type: pr.room_type,
-          price: pr.price
+          price: pr.price,
+          commission: pr.commission || 0
         });
       if (priceError) {
         console.error(`Failed to insert price for program ${programId}:`, priceError.message);

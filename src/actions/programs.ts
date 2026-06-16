@@ -30,6 +30,7 @@ const hotelSchema = z.object({
 const roomPriceSchema = z.object({
   room_type: z.enum(['ثنائية', 'ثلاثية', 'رباعية', 'خماسية']),
   price: z.number().min(0, 'السعر يجب أن يكون موجباً'),
+  commission: z.number().min(0, 'العمولة يجب أن تكون موجبة').default(0),
 })
 
 export async function saveProgram(programData: {
@@ -54,6 +55,7 @@ export async function saveProgram(programData: {
   room_prices: Array<{
     room_type: 'ثنائية' | 'ثلاثية' | 'رباعية' | 'خماسية'
     price: number
+    commission?: number
   }>
   inclusions: string[]
 }) {
@@ -197,6 +199,7 @@ export async function saveProgram(programData: {
       program_id: programId,
       room_type: p.room_type,
       price: p.price,
+      commission: p.commission || 0,
     }))
 
   if (pricesToInsert.length > 0) {

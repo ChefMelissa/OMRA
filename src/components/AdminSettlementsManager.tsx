@@ -194,7 +194,7 @@ export default function AdminSettlementsManager({
                     <p className="font-bold text-foreground mt-0.5">{Number(s.total_bookings_value).toLocaleString()} دج</p>
                   </div>
                   <div>
-                    <span>نسبة عمولة الوكالة:</span>
+                    <span>العمولة الافتراضية للوكالة:</span>
                     <p className="font-bold text-foreground mt-0.5">{s.agency?.commission_rate || 5.0}%</p>
                   </div>
                 </div>

@@ -126,6 +126,36 @@ describe('Booking Server Actions', () => {
       const result = await updateBookingStatus('booking-123', 'booked', 180000)
       expect(result).toEqual({ success: true })
     })
+
+    it('should fetch room commission and save it to commission_value when status is booked', async () => {
+      mockClient.auth.getUser.mockResolvedValueOnce({ data: { user: { id: 'agency-1' } }, error: null })
+      
+      // First single check: select from booking_requests
+      mockClient._chain.single.mockResolvedValueOnce({
+        data: { agency_id: 'agency-1', program_id: 'program-123', room_type: 'ثنائية' },
+        error: null
+      })
+      
+      // Second single check: select from program_room_prices
+      mockAdminClient._chain.single.mockResolvedValueOnce({
+        data: { commission: 4500 },
+        error: null
+      })
+      
+      // Update check
+      mockAdminClient._chain.then.mockImplementationOnce((resolve) => resolve({ data: null, error: null }))
+
+      const result = await updateBookingStatus('booking-123', 'booked', 180000)
+      expect(result).toEqual({ success: true })
+      
+      // Verify update payload contains commission_value
+      expect(mockAdminClient.from).toHaveBeenCalledWith('booking_requests')
+      expect(mockAdminClient._chain.update).toHaveBeenCalledWith(expect.objectContaining({
+        status: 'booked',
+        booking_value: 180000,
+        commission_value: 4500
+      }))
+    })
   })
 
   describe('adminApproveBooking', () => {

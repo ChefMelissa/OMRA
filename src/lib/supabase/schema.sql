@@ -74,6 +74,7 @@ create table public.program_room_prices (
     program_id uuid references public.programs(id) on delete cascade not null,
     room_type text not null check (room_type in ('ثنائية', 'ثلاثية', 'رباعية', 'خماسية')),
     price numeric(12, 2) not null check (price >= 0),
+    commission numeric(12, 2) not null default 0.00 check (commission >= 0),
     created_at timestamp with time zone default timezone('utc'::text, now()) not null,
     constraint unique_program_room_type unique (program_id, room_type)
 );
@@ -102,6 +103,7 @@ create table public.booking_requests (
     notes text,
     status text not null check (status in ('new', 'contacted', 'booked', 'cancelled')) default 'new',
     booking_value numeric(12, 2) check (booking_value >= 0),
+    commission_value numeric(12, 2) check (commission_value >= 0),
     admin_approval text not null check (admin_approval in ('pending', 'approved', 'rejected')) default 'pending',
     created_at timestamp with time zone default timezone('utc'::text, now()) not null,
     updated_at timestamp with time zone default timezone('utc'::text, now()) not null

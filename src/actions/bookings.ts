@@ -131,7 +131,7 @@ export async function updateBookingStatus(
   // Check booking ownership
   const { data: booking, error: fetchErr } = await supabase
     .from('booking_requests')
-    .select('agency_id')
+    .select('agency_id, program_id, room_type')
     .eq('id', bookingId)
     .single()
 
@@ -146,11 +146,24 @@ export async function updateBookingStatus(
     }
   }
 
+  let commissionValue = null
+  if (status === 'booked' && booking.program_id) {
+    const { data: roomPrice } = await adminSupabase
+      .from('program_room_prices')
+      .select('commission')
+      .eq('program_id', booking.program_id)
+      .eq('room_type', booking.room_type)
+      .single()
+    
+    commissionValue = roomPrice?.commission || 0
+  }
+
   const { error: updateErr } = await adminSupabase
     .from('booking_requests')
     .update({
       status,
       booking_value: status === 'booked' ? bookingValue : null,
+      commission_value: status === 'booked' ? commissionValue : null,
       // If status changed from booked, reset approval to pending
       admin_approval: status === 'booked' ? 'pending' : 'pending',
     })

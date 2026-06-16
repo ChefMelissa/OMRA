@@ -70,6 +70,7 @@ export interface RoomPrice {
   program_id: string;
   room_type: RoomType;
   price: number; // in DZD
+  commission: number; // in DZD
   created_at: string;
 }
 
@@ -94,6 +95,7 @@ export interface BookingRequest {
   notes: string | null;
   status: BookingStatus;
   booking_value: number | null; // in DZD
+  commission_value: number | null; // in DZD
   admin_approval: AdminApprovalStatus;
   created_at: string;
   updated_at: string;

@@ -39,12 +39,16 @@ export default async function AdminDashboardPage() {
   const pendingApprovalsCount = bookedRequests.filter(b => b.admin_approval === 'pending').length
 
   // Calculate total commissions
-  // For each approved booking: booking_value * agency_commission_rate / 100
+  // For each approved booking: sum commission_value, or fall back to booking_value * agency_commission_rate / 100
   let totalCommissions = 0
   bookedRequests.forEach(b => {
     if (b.admin_approval === 'approved' && b.booking_value) {
-      const rate = b.agency?.commission_rate ? Number(b.agency.commission_rate) : 5.0
-      totalCommissions += (Number(b.booking_value) * rate) / 100
+      if (b.commission_value !== null && b.commission_value !== undefined) {
+        totalCommissions += Number(b.commission_value)
+      } else {
+        const rate = b.agency?.commission_rate ? Number(b.agency.commission_rate) : 5.0
+        totalCommissions += (Number(b.booking_value) * rate) / 100
+      }
     }
   })
 

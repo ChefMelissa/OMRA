@@ -84,7 +84,7 @@ export async function generateSettlement(
     // 2. Fetch approved bookings for the agency in the date range
     const { data: bookings, error: bookingsErr } = await adminSupabase
       .from('booking_requests')
-      .select('booking_value')
+      .select('booking_value, commission_value')
       .eq('agency_id', agencyId)
       .eq('status', 'booked')
       .eq('admin_approval', 'approved')
@@ -95,7 +95,12 @@ export async function generateSettlement(
 
     const bookingsCount = bookings?.length || 0
     const totalBookingsValue = bookings?.reduce((sum, b) => sum + Number(b.booking_value || 0), 0) || 0
-    const totalCommission = (totalBookingsValue * Number(agency.commission_rate)) / 100
+    const totalCommission = bookings?.reduce((sum, b) => {
+      const comm = b.commission_value !== null && b.commission_value !== undefined
+        ? Number(b.commission_value)
+        : (Number(b.booking_value || 0) * Number(agency.commission_rate)) / 100
+      return sum + comm
+    }, 0) || 0
 
     if (bookingsCount === 0) {
       return { error: 'لا توجد حجوزات معتمدة ومؤكدة لهذه الفترة لتوليد تسوية لها' }

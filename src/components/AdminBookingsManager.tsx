@@ -176,7 +176,9 @@ export default function AdminBookingsManager({ initialBookings }: AdminBookingsM
         {filteredBookings.length > 0 ? (
           filteredBookings.map((b) => {
             const commissionRate = b.agency?.commission_rate ? Number(b.agency.commission_rate) : 5.0
-            const calculatedCommission = b.booking_value ? (Number(b.booking_value) * commissionRate) / 100 : 0
+            const calculatedCommission = b.commission_value !== null && b.commission_value !== undefined
+              ? Number(b.commission_value)
+              : b.booking_value ? (Number(b.booking_value) * commissionRate) / 100 : 0
             
             return (
               <div 
@@ -233,7 +235,11 @@ export default function AdminBookingsManager({ initialBookings }: AdminBookingsM
                         <span className="font-extrabold text-foreground">{Number(b.booking_value).toLocaleString()} دج</span>
                       </div>
                       <div className="flex justify-between items-center text-xs border-b border-card-border/60 pb-2">
-                        <span className="text-muted-text">العمولة المستحقة ({commissionRate}%):</span>
+                        <span className="text-muted-text">
+                          {b.commission_value !== null && b.commission_value !== undefined
+                            ? 'العمولة المستحقة (محددة بالبرنامج):'
+                            : `العمولة المستحقة (${commissionRate}%):`}
+                        </span>
                         <span className="font-black text-primary">{calculatedCommission.toLocaleString()} دج</span>
                       </div>
 

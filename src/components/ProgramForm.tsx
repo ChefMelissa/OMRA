@@ -79,6 +79,14 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
     'خماسية': initialProgram?.room_prices?.find(p => p.room_type === 'خماسية')?.price || 0,
   })
 
+  // Room Commissions State
+  const [roomCommissions, setRoomCommissions] = useState<Record<string, number>>({
+    'ثنائية': initialProgram?.room_prices?.find(p => p.room_type === 'ثنائية')?.commission || 0,
+    'ثلاثية': initialProgram?.room_prices?.find(p => p.room_type === 'ثلاثية')?.commission || 0,
+    'رباعية': initialProgram?.room_prices?.find(p => p.room_type === 'رباعية')?.commission || 0,
+    'خماسية': initialProgram?.room_prices?.find(p => p.room_type === 'خماسية')?.commission || 0,
+  })
+
   // Inclusions State
   const [inclusions, setInclusions] = useState<string[]>(
     initialProgram?.inclusions || []
@@ -86,6 +94,13 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
 
   const handlePriceChange = (type: string, val: string) => {
     setRoomPrices(prev => ({
+      ...prev,
+      [type]: val === '' ? 0 : parseFloat(val)
+    }))
+  }
+
+  const handleCommissionChange = (type: string, val: string) => {
+    setRoomCommissions(prev => ({
       ...prev,
       [type]: val === '' ? 0 : parseFloat(val)
     }))
@@ -124,7 +139,8 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
       .filter(([_, price]) => price > 0)
       .map(([room_type, price]) => ({
         room_type: room_type as any,
-        price
+        price,
+        commission: roomCommissions[room_type] || 0
       }))
 
     if (pricesList.length === 0) {
@@ -458,22 +474,45 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {['ثنائية', 'ثلاثية', 'رباعية', 'خماسية'].map((roomType) => (
-                <div key={roomType} className="p-5 border border-card-border rounded-xl bg-card space-y-2">
+                <div key={roomType} className="p-5 border border-card-border rounded-xl bg-card space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-sm text-foreground">غرفة {roomType}</span>
-                    <span className="text-xs text-muted-text">سعر المعتمر الواحد</span>
+                    <span className="text-xs text-muted-text">سعر المعتمر الواحد والعمولة</span>
                   </div>
-                  <div className="relative rounded-md shadow-sm">
-                    <input
-                      type="number"
-                      min={0}
-                      placeholder="0"
-                      value={roomPrices[roomType] || ''}
-                      onChange={(e) => handlePriceChange(roomType, e.target.value)}
-                      className="w-full pl-16 pr-3 py-3 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary font-semibold text-left"
-                    />
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-muted-text text-xs font-bold">دج (DZD)</span>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-foreground mb-1">السعر (دج) *</label>
+                      <div className="relative rounded-md shadow-sm">
+                        <input
+                          type="number"
+                          min={0}
+                          placeholder="0"
+                          value={roomPrices[roomType] || ''}
+                          onChange={(e) => handlePriceChange(roomType, e.target.value)}
+                          className="w-full pl-16 pr-3 py-2.5 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary font-semibold text-left"
+                        />
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <span className="text-muted-text text-xs font-bold">دج</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-foreground mb-1">عمولة المنصة (دج) *</label>
+                      <div className="relative rounded-md shadow-sm">
+                        <input
+                          type="number"
+                          min={0}
+                          placeholder="0"
+                          value={roomCommissions[roomType] || ''}
+                          onChange={(e) => handleCommissionChange(roomType, e.target.value)}
+                          className="w-full pl-16 pr-3 py-2.5 border border-card-border rounded-xl bg-transparent text-sm focus:ring-secondary focus:border-secondary font-semibold text-left"
+                        />
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <span className="text-muted-text text-xs font-bold">دج</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
