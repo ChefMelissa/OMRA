@@ -64,11 +64,9 @@ export default async function AgencyDashboardPage() {
           <h1 className="text-2xl font-bold text-foreground">نظرة عامة على الوكالة</h1>
           <p className="text-sm text-muted-text mt-1">تتبع أداء برامجك، الطلبات الواردة، والعمولات المستحقة.</p>
         </div>
-        <Link href="/agency/programs?add=true">
-          <button className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold py-2.5 px-4 rounded-xl border border-transparent shadow transition-all duration-200">
-            <Plus className="h-4.5 w-4.5" />
-            <span>إضافة برنامج عمرة</span>
-          </button>
+        <Link href="/agency/programs?add=true" className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold py-2.5 px-4 rounded-xl border border-transparent shadow transition-all duration-200 text-center justify-center">
+          <Plus className="h-4.5 w-4.5" />
+          <span>إضافة برنامج عمرة</span>
         </Link>
       </div>
 
@@ -211,10 +209,8 @@ export default async function AgencyDashboardPage() {
             </p>
           </div>
           <div className="border-t border-card-border pt-4">
-            <Link href="/agency/bookings">
-              <button className="w-full text-center py-2.5 px-4 border border-card-border rounded-xl text-xs font-semibold text-primary hover:bg-muted-bg transition-all">
-                إدارة طلبات الحجز بالكامل
-              </button>
+            <Link href="/agency/bookings" className="w-full text-center py-2.5 px-4 border border-card-border rounded-xl text-xs font-semibold text-primary hover:bg-muted-bg transition-all inline-block">
+              إدارة طلبات الحجز بالكامل
             </Link>
           </div>
         </div>

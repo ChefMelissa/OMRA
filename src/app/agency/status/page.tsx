@@ -110,10 +110,8 @@ export default async function AgencyStatusPage() {
               </button>
             </form>
 
-            <Link href="/" className="flex-1">
-              <button className="w-full flex items-center justify-center gap-2 py-2.5 px-4 border border-transparent rounded-xl text-sm font-semibold text-white bg-primary hover:bg-primary-hover transition-all duration-200">
-                <span>تصفح الموقع</span>
-              </button>
+            <Link href="/" className="flex-1 w-full flex items-center justify-center gap-2 py-2.5 px-4 border border-transparent rounded-xl text-sm font-semibold text-white bg-primary hover:bg-primary-hover transition-all duration-200 text-center">
+              <span>تصفح الموقع</span>
             </Link>
           </div>
         </div>

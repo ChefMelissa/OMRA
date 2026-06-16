@@ -34,10 +34,8 @@ export default async function AgencyProgramsPage({
             <h1 className="text-2xl font-bold text-foreground">إضافة برنامج عمرة جديد</h1>
             <p className="text-sm text-muted-text mt-1">أدخل البيانات وتفاصيل الفنادق والأسعار لحفظ ونشر البرنامج.</p>
           </div>
-          <Link href="/agency/programs">
-            <button className="py-2.5 px-4 border border-card-border rounded-xl text-sm font-semibold text-muted-text hover:text-foreground bg-card transition-all">
-              إلغاء والعودة
-            </button>
+          <Link href="/agency/programs" className="py-2.5 px-4 border border-card-border rounded-xl text-sm font-semibold text-muted-text hover:text-foreground bg-card transition-all text-center inline-block">
+            إلغاء والعودة
           </Link>
         </div>
         <ProgramForm />
@@ -83,10 +81,8 @@ export default async function AgencyProgramsPage({
             <h1 className="text-2xl font-bold text-foreground">تعديل برنامج العمرة</h1>
             <p className="text-sm text-muted-text mt-1">تعديل البيانات الحالية وحفظ التغييرات.</p>
           </div>
-          <Link href="/agency/programs">
-            <button className="py-2.5 px-4 border border-card-border rounded-xl text-sm font-semibold text-muted-text hover:text-foreground bg-card transition-all">
-              إلغاء والعودة
-            </button>
+          <Link href="/agency/programs" className="py-2.5 px-4 border border-card-border rounded-xl text-sm font-semibold text-muted-text hover:text-foreground bg-card transition-all text-center inline-block">
+            إلغاء والعودة
           </Link>
         </div>
         <ProgramForm initialProgram={formattedProgram as any} />
@@ -114,11 +110,9 @@ export default async function AgencyProgramsPage({
           <h1 className="text-2xl font-bold text-foreground">إدارة برامج العمرة</h1>
           <p className="text-sm text-muted-text mt-1">إضافة، تعديل ونشر برامج العمرة وتعديل أسعار الغرف ومتابعة طلبات المراجعة.</p>
         </div>
-        <Link href="/agency/programs?add=true">
-          <button className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold py-2.5 px-4 rounded-xl border border-transparent shadow transition-all duration-200">
-            <Plus className="h-4.5 w-4.5" />
-            <span>إضافة برنامج عمرة</span>
-          </button>
+        <Link href="/agency/programs?add=true" className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold py-2.5 px-4 rounded-xl border border-transparent shadow transition-all duration-200 text-center justify-center">
+          <Plus className="h-4.5 w-4.5" />
+          <span>إضافة برنامج عمرة</span>
         </Link>
       </div>
 
@@ -211,11 +205,9 @@ export default async function AgencyProgramsPage({
                   </div>
 
                   <div className="flex md:w-full gap-2">
-                    <Link href={`/agency/programs?edit=${program.id}`} className="flex-1">
-                      <button className="w-full inline-flex items-center justify-center gap-1 py-2 px-3 border border-card-border rounded-xl text-xs font-semibold text-foreground bg-card hover:bg-muted-bg transition-colors">
-                        <Edit className="h-4 w-4" />
-                        <span>تعديل</span>
-                      </button>
+                    <Link href={`/agency/programs?edit=${program.id}`} className="flex-1 w-full inline-flex items-center justify-center gap-1 py-2 px-3 border border-card-border rounded-xl text-xs font-semibold text-foreground bg-card hover:bg-muted-bg transition-colors text-center">
+                      <Edit className="h-4 w-4" />
+                      <span>تعديل</span>
                     </Link>
 
                     <form 
@@ -242,10 +234,8 @@ export default async function AgencyProgramsPage({
             <CalendarRange className="h-12 w-12 text-muted-text mx-auto animate-bounce" />
             <h3 className="font-bold text-foreground">لا توجد برامج عمرة حالياً</h3>
             <p className="text-sm text-muted-text">ابدأ بنشر أول برامجك لعمرة الجزائر واجذب اهتمام المعتمرين.</p>
-            <Link href="/agency/programs?add=true" className="inline-block mt-2">
-              <button className="bg-primary hover:bg-primary-hover text-white text-xs font-bold py-2.5 px-4 rounded-xl">
-                إضافة برنامج الآن
-              </button>
+            <Link href="/agency/programs?add=true" className="inline-block mt-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold py-2.5 px-4 rounded-xl text-center">
+              إضافة برنامج الآن
             </Link>
           </div>
         )}

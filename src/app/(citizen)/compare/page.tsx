@@ -44,11 +44,9 @@ export default async function CompareProgramsPage({
           </h1>
           <p className="text-sm text-muted-text mt-1">مقارنة الفنادق، الأسعار، ومسافات السير عن الحرم جنباً إلى جنب لتسهيل اختيارك.</p>
         </div>
-        <Link href="/">
-          <button className="py-2.5 px-4 border border-card-border rounded-xl text-xs font-semibold text-muted-text hover:text-foreground bg-card transition-all flex items-center gap-1">
-            <ArrowRight className="h-4 w-4" />
-            <span>العودة للبحث</span>
-          </button>
+        <Link href="/" className="py-2.5 px-4 border border-card-border rounded-xl text-xs font-semibold text-muted-text hover:text-foreground bg-card transition-all flex items-center gap-1">
+          <ArrowRight className="h-4 w-4" />
+          <span>العودة للبحث</span>
         </Link>
       </div>
 
@@ -254,10 +252,8 @@ export default async function CompareProgramsPage({
           <Scale className="h-12 w-12 text-muted-text mx-auto" />
           <h3 className="font-bold text-foreground">لم تقم باختيار برامج للمقارنة بعد</h3>
           <p className="text-sm text-muted-text">تصفح برامج العمرة واضغط على أيقونة الميزان في البطاقة لوضعها في قائمة المقارنة.</p>
-          <Link href="/">
-            <button className="bg-primary hover:bg-primary-hover text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow-sm mt-2">
-              تصفح البرامج الآن
-            </button>
+          <Link href="/" className="bg-primary hover:bg-primary-hover text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow-sm mt-2 inline-block">
+            تصفح البرامج الآن
           </Link>
         </div>
       )}
