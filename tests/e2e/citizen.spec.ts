@@ -15,40 +15,6 @@ test.describe('Citizen Flow E2E Tests', () => {
     const initialCardCount = await cards.count()
     expect(initialCardCount).toBeGreaterThan(0)
 
-    // 3. Test program comparison
-    // Locate comparison button on the first card
-    const firstCard = cards.first()
-    const firstTitle = await firstCard.locator('h3').textContent()
-
-    const compareBtn = firstCard.locator('button[title="قارن مع برامج أخرى"]')
-    await compareBtn.click()
-
-    // Floating comparison drawer should be visible at the bottom
-    const compareDrawer = page.locator('[data-testid="compare-drawer"]')
-    await expect(compareDrawer).toBeVisible()
-
-    // Add a second program card to compare
-    if (initialCardCount > 1) {
-      const secondCard = cards.nth(1)
-      const secondCompareBtn = secondCard.locator('button[title="قارن مع برامج أخرى"]')
-      await secondCompareBtn.click()
-
-      // Should show (2) in the comparison title
-      await expect(page.locator('h4:has-text("مقارنة برامج العمرة")')).toContainText('(2)')
-
-      // Click "قارن الآن" button in the drawer to navigate
-      const compareNowBtn = page.locator('button:has-text("قارن الآن")')
-      await compareNowBtn.click()
-
-      // Should navigate to /compare page
-      await expect(page).toHaveURL(/\/compare\?ids=/)
-      await expect(page.locator('h1')).toContainText('مقارنة برامج العمرة')
-
-      // Return to homepage using the "العودة للبحث" link
-      await page.locator('a:has-text("العودة للبحث")').click()
-      await expect(page).toHaveURL('/')
-    }
-
     // 4. Test detail page and booking modal flow
     // Click on the first card to go to detail page
     await cards.first().click()

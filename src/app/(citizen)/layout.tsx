@@ -20,7 +20,6 @@ export default async function CitizenLayout({
           {/* Nav Links */}
           <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-muted-text">
             <Link href="/" className="hover:text-foreground transition-colors">تصفح البرامج</Link>
-            <Link href="/compare" className="hover:text-foreground transition-colors">مقارنة العروض</Link>
           </nav>
 
           {/* Action buttons (removed for strict separation) */}
@@ -50,7 +49,6 @@ export default async function CitizenLayout({
             <h4 className="font-bold text-sm text-foreground">روابط سريعة</h4>
             <ul className="text-xs text-muted-text space-y-2">
               <li><Link href="/" className="hover:text-foreground transition-colors">الرئيسية وتصفح العروض</Link></li>
-              <li><Link href="/compare" className="hover:text-foreground transition-colors">مقارنة برامج العمرة</Link></li>
             </ul>
           </div>
           <div className="space-y-3">

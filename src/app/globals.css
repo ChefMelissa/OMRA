@@ -2,16 +2,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fdfdfd;
-  --foreground: #0f172a;
+  --background: #faf8f2; /* Beautiful warm manuscript ivory/cream background */
+  --foreground: #1e293b; /* Slate 800 for softer readable contrast */
   
-  --primary: #047857; /* Emerald 700 */
-  --primary-hover: #065f46;
-  --primary-light: #ecfdf5;
+  --primary: #0b5a3a; /* Deep Forest Emerald Green */
+  --primary-hover: #07452c;
+  --primary-light: #f0fbf7; /* Very soft light green tint */
   
-  --secondary: #d97706; /* Amber 600 */
-  --secondary-hover: #b45309;
-  --secondary-light: #fef3c7;
+  --secondary: #c49b45; /* Warm Sand Gold */
+  --secondary-hover: #9f7d38;
+  --secondary-light: #fdfbf2; /* Warm sand tint */
   
   --card: #ffffff;
   --card-border: #e2e8f0;
@@ -24,22 +24,22 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0b0f19;
+    --background: #080c14; /* Deep spiritual night blue-black */
     --foreground: #f8fafc;
     
-    --primary: #10b981; /* Emerald 500 */
-    --primary-hover: #34d399;
-    --primary-light: #064e3b;
+    --primary: #10b981; /* Spiritual Emerald Green */
+    --primary-hover: #059669;
+    --primary-light: #022c22;
     
-    --secondary: #f59e0b; /* Amber 500 */
-    --secondary-hover: #fbbf24;
-    --secondary-light: #78350f;
+    --secondary: #dfb86c; /* Spiritual Sand Gold */
+    --secondary-hover: #f1c87a;
+    --secondary-light: #2d2410;
     
-    --card: #151f32;
+    --card: #0f1624;
     --card-border: #1e293b;
     
     --muted: #94a3b8;
-    --muted-light: #0f172a;
+    --muted-light: #080c14;
   }
 }
 
@@ -66,6 +66,32 @@ body {
   direction: rtl;
   text-align: right;
   min-height: 100vh;
+}
+
+/* Tactile Premium Button Animations on Click/Press */
+button, 
+.btn, 
+a.btn, 
+input[type="submit"], 
+select, 
+.clickable {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+button:hover, 
+.btn:hover, 
+a.btn:hover {
+  transform: translateY(-1px);
+}
+
+button:active, 
+.btn:active, 
+a.btn:active, 
+input[type="submit"]:active, 
+select:active, 
+.clickable:active {
+  transform: scale(0.96) translateY(1px) !important;
+  filter: brightness(0.95);
 }
 
 /* Custom premium scrollbar */

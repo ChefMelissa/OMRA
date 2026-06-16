@@ -133,18 +133,13 @@ export default function CitizenProgramSearch({ initialPrograms }: CitizenProgram
   // Sorting
   const [sortBy, setSortBy] = useState<string>('featured')
 
-  // Favorites & Comparison (stored in LocalStorage)
+  // Favorites (stored in LocalStorage)
   const [favorites, setFavorites] = useState<string[]>([])
-  const [compareList, setCompareList] = useState<any[]>([])
 
   useEffect(() => {
     // Load favorites from local storage
     const savedFavs = localStorage.getItem('omra_favorites')
     if (savedFavs) setFavorites(JSON.parse(savedFavs))
-
-    // Load compareList from local storage
-    const savedCompare = localStorage.getItem('omra_compare')
-    if (savedCompare) setCompareList(JSON.parse(savedCompare))
   }, [])
 
   const toggleFavorite = (id: string, e: React.MouseEvent) => {
@@ -155,24 +150,6 @@ export default function CitizenProgramSearch({ initialPrograms }: CitizenProgram
       : [...favorites, id]
     setFavorites(updated)
     localStorage.setItem('omra_favorites', JSON.stringify(updated))
-  }
-
-  const toggleCompare = (program: any, e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const isAlreadyIn = compareList.some(x => x.id === program.id)
-    let updated = []
-    if (isAlreadyIn) {
-      updated = compareList.filter(x => x.id !== program.id)
-    } else {
-      if (compareList.length >= 4) {
-        alert('يمكنك مقارنة 4 برامج كحد أقصى في وقت واحد.')
-        return
-      }
-      updated = [...compareList, program]
-    }
-    setCompareList(updated)
-    localStorage.setItem('omra_compare', JSON.stringify(updated))
   }
 
   // Extract unique airlines & cities
@@ -613,7 +590,6 @@ export default function CitizenProgramSearch({ initialPrograms }: CitizenProgram
             const madinahHotel = p.hotels?.find((h: any) => h.city === 'المدينة')
             const minPrice = p.room_prices?.reduce((min: number, pr: any) => pr.price < min ? pr.price : min, Infinity) || 0
             const isFav = favorites.includes(p.id)
-            const isCompare = compareList.some(x => x.id === p.id)
 
             // Badges
             const isBestPrice = minPrice < 250000
@@ -641,18 +617,6 @@ export default function CitizenProgramSearch({ initialPrograms }: CitizenProgram
 
                 {/* Floating Action buttons */}
                 <div className="absolute top-4 left-4 z-10 flex gap-2">
-                  {/* Compare button */}
-                  <button
-                    onClick={(e) => toggleCompare(p, e)}
-                    className={`p-2 rounded-xl border backdrop-blur shadow-sm transition-all ${
-                      isCompare 
-                        ? 'bg-primary border-primary text-white' 
-                        : 'bg-white/95 dark:bg-slate-900/95 border-card-border text-muted-text hover:text-foreground'
-                    }`}
-                    title="قارن مع برامج أخرى"
-                  >
-                    <Scale className="h-4.5 w-4.5" />
-                  </button>
                   {/* Heart button */}
                   <button
                     onClick={(e) => toggleFavorite(p.id, e)}
@@ -758,46 +722,6 @@ export default function CitizenProgramSearch({ initialPrograms }: CitizenProgram
         )}
       </div>
 
-      {/* Floating Comparison Drawer */}
-      {compareList.length > 0 && (
-        <div data-testid="compare-drawer" className="fixed bottom-6 inset-x-6 z-40 bg-card border border-primary/20 shadow-2xl p-5 rounded-2xl max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 animate-fade-in">
-          <div className="space-y-1 text-center sm:text-right">
-            <h4 className="font-extrabold text-sm text-foreground">مقارنة برامج العمرة ({compareList.length})</h4>
-            <p className="text-xs text-muted-text">لقد اخترت برامج للمقارنة. قارن الفنادق والمسافات والأسعار جنباً إلى جنب.</p>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-3">
-            {compareList.map((cp) => (
-              <div key={cp.id} className="flex items-center gap-1.5 bg-muted-bg border border-card-border px-3 py-1.5 rounded-xl text-xs font-bold">
-                <span className="max-w-[120px] truncate">{cp.title}</span>
-                <button 
-                  onClick={(e) => toggleCompare(cp, e)}
-                  className="text-red-500 hover:text-red-700 p-0.5 rounded"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex gap-2 w-full sm:w-auto">
-            <Link href={`/compare?ids=${compareList.map(x => x.id).join(',')}`} className="flex-1 sm:flex-none">
-              <button className="w-full bg-primary hover:bg-primary-hover text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow-sm">
-                قارن الآن
-              </button>
-            </Link>
-            <button 
-              onClick={() => {
-                setCompareList([])
-                localStorage.removeItem('omra_compare')
-              }}
-              className="py-2.5 px-3 border border-card-border text-muted-text hover:text-foreground text-xs font-bold rounded-xl bg-card"
-            >
-              إلغاء
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
