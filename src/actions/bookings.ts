@@ -13,6 +13,8 @@ const bookingRequestSchema = z.object({
   is_whatsapp: z.boolean().default(false),
   room_type: z.enum(['ثنائية', 'ثلاثية', 'رباعية', 'خماسية']),
   notes: z.string().max(300, 'الملاحظات يجب أن لا تتجاوز 300 حرف').optional(),
+  adults_count: z.number().int().min(1, 'عدد البالغين يجب أن يكون 1 على الأقل').default(1),
+  children_count: z.number().int().min(0, 'عدد الأطفال يجب أن يكون 0 أو أكثر').default(0),
 })
 
 // Helper to generate reference number
@@ -33,6 +35,8 @@ export async function createBookingRequest(bookingData: {
   is_whatsapp: boolean
   room_type: 'ثنائية' | 'ثلاثية' | 'رباعية' | 'خماسية'
   notes?: string
+  adults_count: number
+  children_count: number
 }) {
   const adminSupabase = createAdminClient()
 
@@ -42,10 +46,10 @@ export async function createBookingRequest(bookingData: {
     return { error: validation.error.issues[0].message }
   }
 
-  // Fetch program details to get agency_id
+  // Fetch program details to get agency_id, status, and commissions
   const { data: program, error: progErr } = await adminSupabase
     .from('programs')
-    .select('agency_id, status')
+    .select('agency_id, status, adult_commission, child_commission')
     .eq('id', bookingData.program_id)
     .single()
 
@@ -80,6 +84,9 @@ export async function createBookingRequest(bookingData: {
     return { error: 'فشل إنشاء رقم مرجعي للحجز، يرجى المحاولة لاحقاً' }
   }
 
+  const commissionValue = (bookingData.adults_count * (program.adult_commission || 0)) + 
+                          (bookingData.children_count * (program.child_commission || 0))
+
   // Insert booking request
   const { data: newBooking, error: insertErr } = await adminSupabase
     .from('booking_requests')
@@ -92,6 +99,9 @@ export async function createBookingRequest(bookingData: {
       is_whatsapp: bookingData.is_whatsapp,
       room_type: bookingData.room_type,
       notes: bookingData.notes || '',
+      adults_count: bookingData.adults_count,
+      children_count: bookingData.children_count,
+      commission_value: commissionValue,
       status: 'new',
       admin_approval: 'pending',
     })
@@ -146,24 +156,11 @@ export async function updateBookingStatus(
     }
   }
 
-  let commissionValue = null
-  if (status === 'booked' && booking.program_id) {
-    const { data: roomPrice } = await adminSupabase
-      .from('program_room_prices')
-      .select('commission')
-      .eq('program_id', booking.program_id)
-      .eq('room_type', booking.room_type)
-      .single()
-    
-    commissionValue = roomPrice?.commission || 0
-  }
-
   const { error: updateErr } = await adminSupabase
     .from('booking_requests')
     .update({
       status,
       booking_value: status === 'booked' ? bookingValue : null,
-      commission_value: status === 'booked' ? commissionValue : null,
       // If status changed from booked, reset approval to pending
       admin_approval: status === 'booked' ? 'pending' : 'pending',
     })

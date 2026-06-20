@@ -32,6 +32,8 @@ describe('Booking Server Actions', () => {
       is_whatsapp: true,
       room_type: 'ثنائية' as const,
       notes: 'ملاحظة تجريبية',
+      adults_count: 1,
+      children_count: 0,
     }
 
     it('should fail if name is too short', async () => {
@@ -127,18 +129,12 @@ describe('Booking Server Actions', () => {
       expect(result).toEqual({ success: true })
     })
 
-    it('should fetch room commission and save it to commission_value when status is booked', async () => {
+    it('should save booking_value and set admin_approval to pending when status is booked', async () => {
       mockClient.auth.getUser.mockResolvedValueOnce({ data: { user: { id: 'agency-1' } }, error: null })
       
       // First single check: select from booking_requests
       mockClient._chain.single.mockResolvedValueOnce({
         data: { agency_id: 'agency-1', program_id: 'program-123', room_type: 'ثنائية' },
-        error: null
-      })
-      
-      // Second single check: select from program_room_prices
-      mockAdminClient._chain.single.mockResolvedValueOnce({
-        data: { commission: 4500 },
         error: null
       })
       
@@ -148,12 +144,12 @@ describe('Booking Server Actions', () => {
       const result = await updateBookingStatus('booking-123', 'booked', 180000)
       expect(result).toEqual({ success: true })
       
-      // Verify update payload contains commission_value
+      // Verify update payload contains booking_value and admin_approval
       expect(mockAdminClient.from).toHaveBeenCalledWith('booking_requests')
       expect(mockAdminClient._chain.update).toHaveBeenCalledWith(expect.objectContaining({
         status: 'booked',
         booking_value: 180000,
-        commission_value: 4500
+        admin_approval: 'pending'
       }))
     })
   })

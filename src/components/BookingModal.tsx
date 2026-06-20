@@ -16,6 +16,8 @@ export default function BookingModal({ program, isOpen, onClose }: BookingModalP
   const [customerPhone, setCustomerPhone] = useState('')
   const [isWhatsapp, setIsWhatsapp] = useState(true)
   const [roomType, setRoomType] = useState<'ثنائية' | 'ثلاثية' | 'رباعية' | 'خماسية'>('ثنائية')
+  const [adultsCount, setAdultsCount] = useState(1)
+  const [childrenCount, setChildrenCount] = useState(0)
   const [notes, setNotes] = useState('')
   
   const [loading, setLoading] = useState(false)
@@ -53,6 +55,8 @@ export default function BookingModal({ program, isOpen, onClose }: BookingModalP
       customer_phone: customerPhone,
       is_whatsapp: isWhatsapp,
       room_type: roomType,
+      adults_count: adultsCount,
+      children_count: childrenCount,
       notes: notes || undefined,
     }
 
@@ -150,8 +154,14 @@ export default function BookingModal({ program, isOpen, onClose }: BookingModalP
                 طلب الحجز المجاني
               </span>
               <h3 className="text-lg font-bold text-foreground mt-2">{program.title}</h3>
-              <p className="text-xs text-muted-text mt-0.5">
-                الوكالة المنظمة: <span className="font-semibold text-foreground">{program.agency?.name}</span>
+              <p className="text-xs text-muted-text mt-1 flex items-center gap-1.5 flex-wrap">
+                <span>الوكالة المنظمة:</span>
+                <span className="font-semibold text-foreground">{program.agency?.name}</span>
+                {program.agency?.contract_signed && (
+                  <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[9px] font-black bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-500 border border-emerald-200 dark:border-emerald-900/30">
+                    ✓ معتمدة بعقد رسمي
+                  </span>
+                )}
               </p>
             </div>
 
@@ -228,6 +238,64 @@ export default function BookingModal({ program, isOpen, onClose }: BookingModalP
                 </select>
               </div>
 
+              {/* Adults & Children Counts */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-foreground mb-1">
+                    عدد البالغين *
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    required
+                    value={adultsCount}
+                    onChange={(e) => setAdultsCount(Math.max(1, parseInt(e.target.value) || 1))}
+                    className="w-full px-3 py-2.5 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary font-semibold text-center"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-foreground mb-1">
+                    عدد الأطفال
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    required
+                    value={childrenCount}
+                    onChange={(e) => setChildrenCount(Math.max(0, parseInt(e.target.value) || 0))}
+                    className="w-full px-3 py-2.5 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary font-semibold text-center"
+                  />
+                </div>
+              </div>
+
+              {/* Live Price Estimation */}
+              {(() => {
+                const selectedRoomPriceObj = availableRoomTypes.find((p) => p.room_type === roomType)
+                const roomPriceValue = selectedRoomPriceObj ? selectedRoomPriceObj.price : 0
+                const childPriceValue = program.child_price || 0
+                const estimatedTotalPrice = (adultsCount * roomPriceValue) + (childrenCount * childPriceValue)
+                
+                if (estimatedTotalPrice <= 0) return null
+                return (
+                  <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 space-y-1.5 animate-fade-in">
+                    <div className="flex justify-between items-center text-[10px] text-muted-text">
+                      <span>تفصيل السعر المقدر:</span>
+                      <span dir="rtl">
+                        {adultsCount} بالغ × {Number(roomPriceValue).toLocaleString()} دج
+                        {childrenCount > 0 && ` + ${childrenCount} طفل × ${Number(childPriceValue).toLocaleString()} دج`}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center font-bold text-sm text-foreground">
+                      <span>التكلفة الإجمالية المقدرة للرحلة</span>
+                      <span className="text-primary text-md font-black">
+                        {Number(estimatedTotalPrice).toLocaleString()} دج
+                      </span>
+                    </div>
+                  </div>
+                )
+              })()}
+
               {/* Notes */}
               <div>
                 <label className="block text-xs font-semibold text-foreground mb-1">
@@ -241,6 +309,15 @@ export default function BookingModal({ program, isOpen, onClose }: BookingModalP
                   className="w-full px-3 py-2.5 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary placeholder-muted-text/30"
                 />
               </div>
+            </div>
+
+            {/* Offline Payment Disclaimer */}
+            <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30 text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
+              <span className="font-extrabold block mb-1">💸 طريقة دفع رسوم الرحلة:</span>
+              <p>
+                لا تطلب منك منصة "عمرة" أي تفاصيل أو دفع إلكتروني بالبطاقة. الحجز هنا هو **طلب تأكيد مجاني**. 
+                سوف تتصل بك الوكالة مباشرة بعد تقديم الطلب للاتفاق على كيفية الدفع وتدبير الملف ( CCP أو نقداً في مكتبهم).
+              </p>
             </div>
 
             {/* Footer Form info */}

@@ -83,8 +83,15 @@ export default async function ProgramDetailPage({ params }: PageProps) {
           <div className="bg-card border border-card-border p-6 md:p-8 rounded-3xl shadow-sm space-y-6">
             <div className="space-y-3">
               <h1 className="text-2xl md:text-3xl font-extrabold text-foreground leading-tight">{program.title}</h1>
-              <p className="text-sm text-muted-text">
-                من تنظيم: <span className="font-semibold text-foreground">{(program.agency as any)?.name}</span> • رخصة: {(program.agency as any)?.license_number}
+              <p className="text-sm text-muted-text flex items-center gap-2 flex-wrap">
+                <span>من تنظيم:</span>
+                <span className="font-semibold text-foreground">{(program.agency as any)?.name}</span>
+                <span>• رخصة: {(program.agency as any)?.license_number}</span>
+                {(program.agency as any)?.contract_signed && (
+                  <span className="inline-flex items-center gap-0.5 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-500 border border-emerald-200 dark:border-emerald-900/30">
+                    ✓ معتمدة بعقد رسمي
+                  </span>
+                )}
               </p>
             </div>
 
@@ -96,20 +103,26 @@ export default async function ProgramDetailPage({ params }: PageProps) {
             )}
 
             {/* Travel details badges */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 border-t border-card-border pt-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-card-border pt-6">
               <div className="p-3 bg-muted-bg/30 rounded-2xl border border-card-border/60 text-center">
                 <span className="text-[10px] text-muted-text font-bold block mb-1">المدة الإجمالية</span>
-                <span className="font-black text-md text-foreground">{program.duration_days} يوم</span>
+                <span className="font-black text-xs sm:text-sm text-foreground">{program.duration_days} يوم</span>
               </div>
               <div className="p-3 bg-muted-bg/30 rounded-2xl border border-card-border/60 text-center">
                 <span className="text-[10px] text-muted-text font-bold block mb-1">مدينة الانطلاق</span>
-                <span className="font-black text-md text-foreground">{program.departure_city}</span>
+                <span className="font-black text-xs sm:text-sm text-foreground">{program.departure_city}</span>
               </div>
-              <div className="p-3 bg-muted-bg/30 rounded-2xl border border-card-border/60 text-center col-span-2 sm:col-span-1">
+              <div className="p-3 bg-muted-bg/30 rounded-2xl border border-card-border/60 text-center">
+                <span className="text-[10px] text-muted-text font-bold block mb-1">نوع الرحلة</span>
+                <span className="font-black text-xs sm:text-sm text-foreground">
+                  {program.flight_type === 'transit' ? '✈️ ترانزيت' : '✨ رحلة مباشرة'}
+                </span>
+              </div>
+              <div className="p-3 bg-muted-bg/30 rounded-2xl border border-card-border/60 text-center">
                 <span className="text-[10px] text-muted-text font-bold block mb-1">الخطوط الجوية</span>
-                <span className="font-black text-md text-foreground flex items-center justify-center gap-1">
-                  <Plane className="h-4 w-4 text-primary shrink-0" />
-                  <span>{program.airline}</span>
+                <span className="font-black text-xs sm:text-sm text-foreground flex items-center justify-center gap-1">
+                  <Plane className="h-3 w-3 text-primary shrink-0" />
+                  <span className="truncate">{program.airline}</span>
                 </span>
               </div>
             </div>
@@ -208,16 +221,81 @@ export default async function ProgramDetailPage({ params }: PageProps) {
 
             <div className="overflow-hidden border border-card-border rounded-2xl divide-y divide-card-border">
               {program.room_prices && program.room_prices.length > 0 ? (
-                program.room_prices.map((p: any) => (
-                  <div key={p.id} className="flex justify-between items-center p-4 hover:bg-muted-bg/10 transition-colors">
-                    <span className="font-bold text-sm text-foreground">غرفة {p.room_type}</span>
-                    <span className="font-black text-md text-primary">{Number(p.price).toLocaleString()} دج</span>
+                <>
+                  {program.room_prices.map((p: any) => (
+                    <div key={p.id} className="flex justify-between items-center p-4 hover:bg-muted-bg/10 transition-colors">
+                      <span className="font-bold text-sm text-foreground">غرفة {p.room_type}</span>
+                      <span className="font-black text-md text-primary">{Number(p.price).toLocaleString()} دج</span>
+                    </div>
+                  ))}
+                  <div className="flex justify-between items-center p-4 hover:bg-muted-bg/10 transition-colors bg-secondary/5 border-t border-dashed border-card-border">
+                    <div className="flex flex-col">
+                      <span className="font-bold text-sm text-foreground">سعر الطفل (تذكرة + تأشيرة بدون سرير)</span>
+                      <span className="text-[10px] text-muted-text">تسعيرة الأطفال المعتمدة للرحلة</span>
+                    </div>
+                    <span className="font-black text-md text-secondary">
+                      {program.child_price > 0 ? `${Number(program.child_price).toLocaleString()} دج` : 'حسب الطلب'}
+                    </span>
                   </div>
-                ))
+                </>
               ) : (
                 <div className="p-4 text-center text-xs text-muted-text">يرجى التواصل مع الوكالة للاستفسار عن تفاصيل الأسعار.</div>
               )}
             </div>
+          </div>
+
+          {/* Card 3.5: Agency Details & Trust Box */}
+          <div className="bg-card border border-card-border p-6 md:p-8 rounded-3xl shadow-sm space-y-5">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-bold text-foreground">الوكالة المنظمة والاعتماد الجغرافي</h2>
+            </div>
+            <p className="text-xs text-muted-text -mt-2">معلومات الاعتماد وعقود العمل الرسمية للوكالة بالمنصة مع فروعها الجغرافية.</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 border border-card-border rounded-xl space-y-2 bg-muted-bg/10">
+                <span className="text-[10px] text-muted-text font-bold block">توثيق العقد والمكتب</span>
+                <div className="space-y-1">
+                  <p className="text-xs text-foreground font-semibold flex items-center gap-1.5">
+                    <span>حالة العقد مع المنصة:</span>
+                    {program.agency?.contract_signed ? (
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/20 px-2 py-0.5 rounded border border-emerald-100 text-[10px]">
+                        ✓ موقّع بعقد رسمي
+                      </span>
+                    ) : (
+                      <span className="text-amber-600 dark:text-amber-400 font-bold bg-amber-50 dark:bg-amber-950/20 px-2 py-0.5 rounded border border-amber-100 text-[10px]">
+                        معلق الاتفاقية
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-xs text-muted-text">
+                    رخصة العمل السياحية: <span className="text-foreground font-bold">{(program.agency as any)?.license_number}</span>
+                  </p>
+                  <p className="text-xs text-muted-text">
+                    الولاية الرئيسية: <span className="text-foreground font-bold">{(program.agency as any)?.city}</span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-4 border border-card-border rounded-xl space-y-2 bg-muted-bg/10">
+                <span className="text-[10px] text-muted-text font-bold block">الحساب البريدي الجاري (CCP) للدفع</span>
+                {(program.agency as any)?.ccp_number ? (
+                  <div className="space-y-1 text-xs">
+                    <p className="font-mono font-bold text-primary">{(program.agency as any).ccp_number}</p>
+                    <p className="text-muted-text">صاحب الحساب: <span className="text-foreground font-bold">{(program.agency as any).ccp_holder}</span></p>
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-text">تتواصل معك الوكالة مباشرة لإرسال تفاصيل حساب الـ CCP لإتمام الدفع.</p>
+                )}
+              </div>
+            </div>
+
+            {(program.agency as any)?.branches && (
+              <div className="p-4 border border-card-border rounded-xl space-y-2 bg-muted-bg/10">
+                <span className="text-[10px] text-muted-text font-bold block">الفروع الجغرافية وعناوين مكاتب الوكالة بالجزائر</span>
+                <p className="text-xs text-foreground whitespace-pre-line leading-relaxed">{(program.agency as any).branches}</p>
+              </div>
+            )}
           </div>
 
           {/* Card 4: Inclusions Checklist */}

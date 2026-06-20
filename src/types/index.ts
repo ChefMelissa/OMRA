@@ -21,6 +21,10 @@ export interface Agency {
   status: AgencyStatus;
   rejection_reason: string | null;
   commission_rate: number;
+  contract_signed: boolean;
+  ccp_number: string | null;
+  ccp_holder: string | null;
+  branches: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -39,6 +43,10 @@ export interface UmrahProgram {
   airline: string;
   seats_available: number;
   status: ProgramStatus;
+  adult_commission: number;
+  child_commission: number;
+  flight_type: 'direct' | 'transit';
+  child_price: number;
   created_at: string;
   updated_at: string;
   
@@ -70,7 +78,6 @@ export interface RoomPrice {
   program_id: string;
   room_type: RoomType;
   price: number; // in DZD
-  commission: number; // in DZD
   created_at: string;
 }
 
@@ -94,6 +101,8 @@ export interface BookingRequest {
   room_type: RoomType;
   notes: string | null;
   status: BookingStatus;
+  adults_count: number;
+  children_count: number;
   booking_value: number | null; // in DZD
   commission_value: number | null; // in DZD
   admin_approval: AdminApprovalStatus;

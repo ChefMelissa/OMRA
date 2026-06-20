@@ -96,9 +96,20 @@ export default function AgencyProfilePage() {
             <div className="text-center sm:text-right space-y-1">
               <h3 className="font-extrabold text-md text-foreground">{agencyData.name}</h3>
               <p className="text-xs text-muted-text">رقم الرخصة: {agencyData.license_number}</p>
-              <div className="inline-flex items-center gap-1.5 text-xs font-bold text-primary">
-                <ShieldCheck className="h-4 w-4" />
-                <span>حساب معتمد وعمولتك المتفق عليها: {agencyData.commission_rate}%</span>
+              <div className="flex flex-wrap gap-2 mt-1 justify-center sm:justify-start">
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-primary bg-primary-light dark:bg-primary-light/5 px-2.5 py-1 rounded-lg">
+                  <ShieldCheck className="h-4 w-4" />
+                  <span>حساب معتمد ونشط</span>
+                </span>
+                {agencyData.contract_signed ? (
+                  <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 px-2.5 py-1 rounded-lg border border-emerald-100 dark:border-emerald-900/30">
+                    العقد الرسمي موقّع ✓
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-600 bg-amber-50 dark:bg-amber-950/20 px-2.5 py-1 rounded-lg border border-amber-100 dark:border-amber-900/30">
+                    العقد الرسمي غير موقّع بعد ⚠️
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -181,6 +192,56 @@ export default function AgencyProfilePage() {
             />
             <p className="mt-1.5 text-xs text-muted-text">
               يمكنك رفع شعارك على أي موقع رفع صور ووضع الرابط المباشر هنا ليظهر على برامجك المعروضة.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="ccpNumber" className="block text-sm font-semibold text-foreground mb-1">
+                رقم الحساب البريدي الجاري (CCP) للدفع
+              </label>
+              <input
+                id="ccpNumber"
+                name="ccpNumber"
+                type="text"
+                defaultValue={agencyData.ccp_number || ''}
+                placeholder="مثال: 0022345678"
+                className="w-full px-3 py-3 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary text-left"
+                dir="ltr"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="ccpHolder" className="block text-sm font-semibold text-foreground mb-1">
+                الاسم الكامل لصاحب حساب الـ CCP
+              </label>
+              <input
+                id="ccpHolder"
+                name="ccpHolder"
+                type="text"
+                defaultValue={agencyData.ccp_holder || ''}
+                placeholder="مثال: محمد بن علي"
+                className="w-full px-3 py-3 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="branches" className="block text-sm font-semibold text-foreground mb-1">
+              فروع وعناوين مكاتب الوكالة بالجزائر
+            </label>
+            <textarea
+              id="branches"
+              name="branches"
+              rows={3}
+              defaultValue={agencyData.branches || ''}
+              placeholder="مثال:
+- الفرع الرئيسي: الجزائر العاصمة، ديدوش مراد رقم 12
+- فرع وهران: حي العقيد لطفي، عمارة ب"
+              className="w-full px-3 py-3 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary"
+            />
+            <p className="mt-1 text-xs text-muted-text">
+              ضع كل فرع في سطر جديد لتسهيل القراءة للزبائن وتوجيههم لأقرب مكتب لديهم.
             </p>
           </div>
 

@@ -28,6 +28,20 @@ const INCLUSION_OPTIONS = [
   'حقيبة إهداء وكتيب العمرة'
 ]
 
+const ALGERIAN_AIRPORTS = [
+  'الجزائر العاصمة (ALG)',
+  'وهران (ORN)',
+  'قسنطينة (CZL)',
+  'عنابة (AAE)',
+  'ورقلة (OGX)',
+  'الوادي (ELU)',
+  'غرداية (GHA)',
+  'أدرار (AZR)',
+  'باتنة (BLJ)',
+  'تلمسان (TLM)',
+  'بجاية (BJA)'
+]
+
 export default function ProgramForm({ initialProgram }: ProgramFormProps) {
   const router = useRouter()
   const [step, setStep] = useState(1)
@@ -44,7 +58,9 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
   const [returnDate, setReturnDate] = useState(
     initialProgram?.return_date ? new Date(initialProgram.return_date).toISOString().split('T')[0] : ''
   )
-  const [departureCity, setDepartureCity] = useState(initialProgram?.departure_city || 'الجزائر')
+  const [departureCity, setDepartureCity] = useState(initialProgram?.departure_city || 'الجزائر العاصمة (ALG)')
+  const [flightType, setFlightType] = useState<'direct' | 'transit'>(initialProgram?.flight_type || 'direct')
+  const [childPrice, setChildPrice] = useState<number>(initialProgram?.child_price || 0)
   const [airline, setAirline] = useState(initialProgram?.airline || '')
   const [seatsAvailable, setSeatsAvailable] = useState(initialProgram?.seats_available || 50)
   const [status, setStatus] = useState<'draft' | 'active' | 'closed'>(initialProgram?.status || 'draft')
@@ -79,13 +95,9 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
     'خماسية': initialProgram?.room_prices?.find(p => p.room_type === 'خماسية')?.price || 0,
   })
 
-  // Room Commissions State
-  const [roomCommissions, setRoomCommissions] = useState<Record<string, number>>({
-    'ثنائية': initialProgram?.room_prices?.find(p => p.room_type === 'ثنائية')?.commission || 0,
-    'ثلاثية': initialProgram?.room_prices?.find(p => p.room_type === 'ثلاثية')?.commission || 0,
-    'رباعية': initialProgram?.room_prices?.find(p => p.room_type === 'رباعية')?.commission || 0,
-    'خماسية': initialProgram?.room_prices?.find(p => p.room_type === 'خماسية')?.commission || 0,
-  })
+  // Adult and Child Commissions State
+  const [adultCommission, setAdultCommission] = useState<number>(initialProgram?.adult_commission || 0)
+  const [childCommission, setChildCommission] = useState<number>(initialProgram?.child_commission || 0)
 
   // Inclusions State
   const [inclusions, setInclusions] = useState<string[]>(
@@ -94,13 +106,6 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
 
   const handlePriceChange = (type: string, val: string) => {
     setRoomPrices(prev => ({
-      ...prev,
-      [type]: val === '' ? 0 : parseFloat(val)
-    }))
-  }
-
-  const handleCommissionChange = (type: string, val: string) => {
-    setRoomCommissions(prev => ({
       ...prev,
       [type]: val === '' ? 0 : parseFloat(val)
     }))
@@ -140,7 +145,6 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
       .map(([room_type, price]) => ({
         room_type: room_type as any,
         price,
-        commission: roomCommissions[room_type] || 0
       }))
 
     if (pricesList.length === 0) {
@@ -159,6 +163,10 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
       return_date: returnDate,
       departure_city: departureCity,
       airline,
+      adult_commission: Number(adultCommission),
+      child_commission: Number(childCommission),
+      flight_type: flightType,
+      child_price: Number(childPrice),
       seats_available: Number(seatsAvailable),
       status,
       hotels,
@@ -293,14 +301,17 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
                 <label className="block text-sm font-semibold text-foreground mb-1">
                   مدينة الانطلاق *
                 </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="مثال: الجزائر، قسنطينة، وهران"
+                <select
                   value={departureCity}
                   onChange={(e) => setDepartureCity(e.target.value)}
-                  className="w-full px-3 py-3 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary placeholder-muted-text/30"
-                />
+                  className="w-full px-3 py-3 border border-card-border rounded-xl bg-card text-sm focus:ring-primary focus:border-primary"
+                >
+                  {ALGERIAN_AIRPORTS.map((airport) => (
+                    <option key={airport} value={airport}>
+                      {airport}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
@@ -329,6 +340,22 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
                   onChange={(e) => setSeatsAvailable(parseInt(e.target.value))}
                   className="w-full px-3 py-3 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary"
                 />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-foreground mb-1">
+                  نوع الرحلة *
+                </label>
+                <select
+                  value={flightType}
+                  onChange={(e) => setFlightType(e.target.value as any)}
+                  className="w-full px-3 py-3 border border-card-border rounded-xl bg-card text-sm focus:ring-primary focus:border-primary"
+                >
+                  <option value="direct">رحلة مباشرة (Direct)</option>
+                  <option value="transit">رحلة غير مباشرة / ترانزيت (Transit)</option>
+                </select>
               </div>
             </div>
           </div>
@@ -467,8 +494,84 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
             <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30 flex gap-2.5 text-xs text-amber-800 dark:text-amber-300">
               <HelpCircle className="h-5 w-5 shrink-0" />
               <div className="space-y-1">
-                <p className="font-bold">ملاحظة هامة حول إدخال الأسعار:</p>
-                <p>جميع الأسعار بالدينار الجزائري (DZD). حدد الأسعار المناسبة للغرف المتوفرة؛ سيتم تجاهل أي غرفة يترك سعرها بقيمة (0).</p>
+                <p className="font-bold">ملاحظة هامة حول إدخال الأسعار والعمولات:</p>
+                <p>جميع المبالغ بالدينار الجزائري (DZD). حدد الأسعار المناسبة للغرف المتوفرة؛ سيتم تجاهل أي غرفة يترك سعرها بقيمة (0). حدد عمولة الوكالة الخاصة بكل بالغ وطفل.</p>
+              </div>
+            </div>
+
+            {/* Commissions Section */}
+            <div className="p-5 border border-primary/20 rounded-xl bg-primary/5 space-y-4">
+              <div className="flex gap-2 items-center">
+                <div className="h-2 w-2 rounded-full bg-primary" />
+                <h4 className="font-bold text-sm text-foreground">عمولة الوكالة (لكل شخص)</h4>
+              </div>
+              <p className="text-xs text-muted-text">
+                حدد قيمة العمولة المخصصة لوكالتك عن كل معتمر (بالغ / طفل) يسجل في هذا البرنامج.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-foreground mb-1">عمولة الشخص البالغ (دج) *</label>
+                  <div className="relative rounded-md shadow-sm">
+                    <input
+                      type="number"
+                      min={0}
+                      required
+                      placeholder="0"
+                      value={adultCommission || ''}
+                      onChange={(e) => setAdultCommission(e.target.value === '' ? 0 : parseFloat(e.target.value))}
+                      className="w-full pl-16 pr-3 py-2.5 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary font-semibold text-left"
+                    />
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span className="text-muted-text text-xs font-bold">دج</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-foreground mb-1">عمولة الطفل (دج) *</label>
+                  <div className="relative rounded-md shadow-sm">
+                    <input
+                      type="number"
+                      min={0}
+                      required
+                      placeholder="0"
+                      value={childCommission || ''}
+                      onChange={(e) => setChildCommission(e.target.value === '' ? 0 : parseFloat(e.target.value))}
+                      className="w-full pl-16 pr-3 py-2.5 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary font-semibold text-left"
+                    />
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span className="text-muted-text text-xs font-bold">دج</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Child Price Section */}
+            <div className="p-5 border border-card-border rounded-xl bg-card space-y-4">
+              <div className="flex gap-2 items-center">
+                <div className="h-2 w-2 rounded-full bg-secondary" />
+                <h4 className="font-bold text-sm text-foreground">تسعيرة الأطفال (خاص بسوق الجزائر)</h4>
+              </div>
+              <p className="text-xs text-muted-text">
+                أدخل تكلفة السفر التقريبية للطفل الواحد بالدينار الجزائري (تشمل عادة التأشيرة والتذكرة دون سرير مستقل).
+              </p>
+              <div>
+                <label className="block text-xs font-semibold text-foreground mb-1">سعر الطفل (دج) *</label>
+                <div className="relative rounded-md shadow-sm max-w-md">
+                  <input
+                    type="number"
+                    min={0}
+                    required
+                    placeholder="0"
+                    value={childPrice || ''}
+                    onChange={(e) => setChildPrice(e.target.value === '' ? 0 : parseFloat(e.target.value))}
+                    className="w-full pl-16 pr-3 py-2.5 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary font-semibold text-left"
+                  />
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span className="text-muted-text text-xs font-bold">دج</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -477,7 +580,7 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
                 <div key={roomType} className="p-5 border border-card-border rounded-xl bg-card space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-sm text-foreground">غرفة {roomType}</span>
-                    <span className="text-xs text-muted-text">سعر المعتمر الواحد والعمولة</span>
+                    <span className="text-xs text-muted-text">سعر المعتمر الواحد</span>
                   </div>
                   
                   <div className="space-y-3">
@@ -491,23 +594,6 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
                           value={roomPrices[roomType] || ''}
                           onChange={(e) => handlePriceChange(roomType, e.target.value)}
                           className="w-full pl-16 pr-3 py-2.5 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary font-semibold text-left"
-                        />
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <span className="text-muted-text text-xs font-bold">دج</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-foreground mb-1">عمولة المنصة (دج) *</label>
-                      <div className="relative rounded-md shadow-sm">
-                        <input
-                          type="number"
-                          min={0}
-                          placeholder="0"
-                          value={roomCommissions[roomType] || ''}
-                          onChange={(e) => handleCommissionChange(roomType, e.target.value)}
-                          className="w-full pl-16 pr-3 py-2.5 border border-card-border rounded-xl bg-transparent text-sm focus:ring-secondary focus:border-secondary font-semibold text-left"
                         />
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                           <span className="text-muted-text text-xs font-bold">دج</span>

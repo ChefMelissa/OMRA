@@ -28,6 +28,7 @@ export async function updateAgencyStatus(
   options?: {
     rejectionReason?: string
     commissionRate?: number
+    contractSigned?: boolean
   }
 ) {
   try {
@@ -44,6 +45,10 @@ export async function updateAgencyStatus(
 
     if (options?.commissionRate !== undefined) {
       updateData.commission_rate = options.commissionRate
+    }
+
+    if (options?.contractSigned !== undefined) {
+      updateData.contract_signed = options.contractSigned
     }
 
     const { error } = await adminSupabase

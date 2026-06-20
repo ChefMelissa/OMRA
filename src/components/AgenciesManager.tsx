@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { updateAgencyStatus } from '@/actions/admin'
 import { 
   Users, CheckCircle2, ShieldAlert, AlertTriangle, 
-  Search, ShieldX, X, Percent, HelpCircle 
+  Search, ShieldX, X, HelpCircle 
 } from 'lucide-react'
 
 interface AgenciesManagerProps {
@@ -22,16 +22,17 @@ export default function AgenciesManager({ initialAgencies }: AgenciesManagerProp
   const [actionType, setActionType] = useState<'approve' | 'reject' | 'suspend' | null>(null)
   
   // Fields for approval/rejection
-  const [commissionRate, setCommissionRate] = useState<string>('5.0')
+  const [contractSigned, setContractSigned] = useState<boolean>(false)
   const [reason, setReason] = useState<string>('')
   
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const handleOpenAction = (id: string, type: 'approve' | 'reject' | 'suspend') => {
+    const agencyObj = initialAgencies.find(a => a.id === id)
     setActiveAgencyId(id)
     setActionType(type)
-    setCommissionRate('5.0')
+    setContractSigned(agencyObj?.contract_signed || false)
     setReason('')
     setError(null)
   }
@@ -49,13 +50,7 @@ export default function AgenciesManager({ initialAgencies }: AgenciesManagerProp
 
     let options: any = {}
     if (actionType === 'approve') {
-      const parsedRate = parseFloat(commissionRate)
-      if (isNaN(parsedRate) || parsedRate < 0 || parsedRate > 100) {
-        setError('يرجى إدخال نسبة عمولة صالحة بين 0% و 100%.')
-        setLoading(false)
-        return
-      }
-      options.commissionRate = parsedRate
+      options.contractSigned = contractSigned
     } else {
       if (reason.trim().length < 5) {
         setError('يرجى كتابة سبب التوقيف أو الرفض بالتفصيل (5 أحرف على الأقل).')
@@ -164,10 +159,15 @@ export default function AgenciesManager({ initialAgencies }: AgenciesManagerProp
                   <p>الولاية: <span className="font-bold text-foreground">{agency.city}</span></p>
                   <p>الهاتف: <span className="font-bold text-foreground text-left" dir="ltr">{agency.phone}</span></p>
                   <p>البريد: <span className="font-semibold text-foreground truncate block">{agency.email}</span></p>
-                  <p className="inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-primary-light dark:bg-primary-light/5 px-2 py-0.5 rounded mt-1">
-                    <Percent className="h-3 w-3" />
-                    <span>العمولة المتفق عليها: {agency.commission_rate}%</span>
-                  </p>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded ${
+                      agency.contract_signed 
+                        ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-500 border border-emerald-100 dark:border-emerald-900/30' 
+                        : 'bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-500 border border-amber-100 dark:border-amber-900/30'
+                    }`}>
+                      {agency.contract_signed ? 'العقد: موقّع ✓' : 'العقد: غير موقّع ⚠️'}
+                    </span>
+                  </div>
                 </div>
 
                 {agency.status === 'rejected' && agency.rejection_reason && (
@@ -210,7 +210,7 @@ export default function AgenciesManager({ initialAgencies }: AgenciesManagerProp
                       onClick={() => handleOpenAction(agency.id, 'approve')}
                       className="py-1.5 px-3 border border-card-border hover:bg-muted-bg text-xs font-bold rounded-xl transition-all"
                     >
-                      تعديل العمولة
+                      تعديل حالة العقد
                     </button>
                     <button
                       onClick={() => handleOpenAction(agency.id, 'suspend')}
@@ -275,27 +275,24 @@ export default function AgenciesManager({ initialAgencies }: AgenciesManagerProp
 
             <div className="space-y-4">
               {actionType === 'approve' && (
-                <div>
-                  <label className="block text-xs font-bold text-foreground mb-1">
-                    نسبة عمولة المنصة المتفق عليها (%) *
-                  </label>
-                  <div className="relative rounded-md shadow-sm">
+                <div className="space-y-4">
+                  <div className="flex items-start gap-2.5 p-3 rounded-xl border border-card-border bg-muted-bg/30">
                     <input
-                      type="number"
-                      step="0.5"
-                      min="0"
-                      max="100"
-                      value={commissionRate}
-                      onChange={(e) => setCommissionRate(e.target.value)}
-                      className="w-full pl-10 pr-3 py-2.5 border border-card-border rounded-xl text-sm bg-card focus:ring-primary"
+                      id="contract-signed-checkbox"
+                      type="checkbox"
+                      checked={contractSigned}
+                      onChange={(e) => setContractSigned(e.target.checked)}
+                      className="h-4 w-4 text-primary border-card-border rounded focus:ring-primary mt-0.5"
                     />
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Percent className="h-4 w-4 text-muted-text" />
+                    <div>
+                      <label htmlFor="contract-signed-checkbox" className="block text-xs font-bold text-foreground">
+                        توقيع الاتفاقية والعقد الرسمي
+                      </label>
+                      <p className="text-[10px] text-muted-text leading-relaxed">
+                        تحديد هذا الخيار يعني أن الوكالة قد قامت بتوقيع العقد القانوني الورقي معنا لضمان مصداقية العروض والأسعار المنشورة.
+                      </p>
                     </div>
                   </div>
-                  <p className="mt-1 text-[10px] text-muted-text leading-relaxed">
-                    سيتم احتساب هذه النسبة تلقائياً من قيمة أي حجز مؤكد ومقبول لهذه الوكالة (مثال: 5.0%).
-                  </p>
                 </div>
               )}
 

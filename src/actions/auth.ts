@@ -156,6 +156,9 @@ export async function updateAgencyProfile(prevState: any, formData: FormData) {
   const phone = formData.get('phone') as string
   const whatsapp = formData.get('whatsapp') as string
   const logoUrl = formData.get('logoUrl') as string
+  const ccpNumber = formData.get('ccpNumber') as string
+  const ccpHolder = formData.get('ccpHolder') as string
+  const branches = formData.get('branches') as string
 
   if (!name || !city || !phone || !whatsapp) {
     return { error: 'الرجاء إدخال الحقول الإلزامية الاسم والمدينة والهاتف والواتساب' }
@@ -170,6 +173,9 @@ export async function updateAgencyProfile(prevState: any, formData: FormData) {
       phone,
       whatsapp,
       logo_url: logoUrl || null,
+      ccp_number: ccpNumber || null,
+      ccp_holder: ccpHolder || null,
+      branches: branches || null,
     })
     .eq('id', user.id)
 

@@ -215,7 +215,8 @@ export default function AdminBookingsManager({ initialBookings }: AdminBookingsM
                   </p>
 
                   <p className="text-xs text-muted-text">
-                    الوكالة المنظمة: <span className="font-bold text-foreground">{b.agency?.name}</span> (نسبة العمولة: {commissionRate}%)
+                    الوكالة المنظمة: <span className="font-bold text-foreground">{b.agency?.name}</span>
+                    {(b.commission_value === null || b.commission_value === undefined) && ` (نسبة العمولة: ${commissionRate}%)`}
                   </p>
 
                   <div className="flex gap-4 text-xs font-bold">

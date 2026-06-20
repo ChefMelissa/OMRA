@@ -16,6 +16,10 @@ const programBaseSchema = z.object({
   airline: z.string().min(2, 'الخطوط الجوية مطلوبة'),
   seats_available: z.number().int().min(0, 'عدد المقاعد يجب أن يكون موجباً'),
   status: z.enum(['draft', 'active', 'closed']).default('draft'),
+  adult_commission: z.number().min(0, 'عمولة البالغ يجب أن تكون موجبة').default(0),
+  child_commission: z.number().min(0, 'عمولة الطفل يجب أن تكون موجبة').default(0),
+  flight_type: z.enum(['direct', 'transit']).default('direct'),
+  child_price: z.number().min(0, 'سعر الطفل يجب أن يكون موجباً').default(0),
 })
 
 const hotelSchema = z.object({
@@ -30,7 +34,6 @@ const hotelSchema = z.object({
 const roomPriceSchema = z.object({
   room_type: z.enum(['ثنائية', 'ثلاثية', 'رباعية', 'خماسية']),
   price: z.number().min(0, 'السعر يجب أن يكون موجباً'),
-  commission: z.number().min(0, 'العمولة يجب أن تكون موجبة').default(0),
 })
 
 export async function saveProgram(programData: {
@@ -42,6 +45,10 @@ export async function saveProgram(programData: {
   return_date: string
   departure_city: string
   airline: string
+  adult_commission: number
+  child_commission: number
+  flight_type: 'direct' | 'transit'
+  child_price: number
   seats_available: number
   status: 'draft' | 'active' | 'closed'
   hotels: Array<{
@@ -55,7 +62,6 @@ export async function saveProgram(programData: {
   room_prices: Array<{
     room_type: 'ثنائية' | 'ثلاثية' | 'رباعية' | 'خماسية'
     price: number
-    commission?: number
   }>
   inclusions: string[]
 }) {
@@ -129,6 +135,10 @@ export async function saveProgram(programData: {
         airline: programData.airline,
         seats_available: programData.seats_available,
         status: programData.status,
+        adult_commission: programData.adult_commission,
+        child_commission: programData.child_commission,
+        flight_type: programData.flight_type,
+        child_price: programData.child_price,
       })
       .eq('id', programId)
 
@@ -162,6 +172,10 @@ export async function saveProgram(programData: {
         airline: programData.airline,
         seats_available: programData.seats_available,
         status: programData.status,
+        adult_commission: programData.adult_commission,
+        child_commission: programData.child_commission,
+        flight_type: programData.flight_type,
+        child_price: programData.child_price,
       })
       .select('id')
       .single()
@@ -199,7 +213,6 @@ export async function saveProgram(programData: {
       program_id: programId,
       room_type: p.room_type,
       price: p.price,
-      commission: p.commission || 0,
     }))
 
   if (pricesToInsert.length > 0) {

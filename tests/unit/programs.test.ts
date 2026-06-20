@@ -34,6 +34,10 @@ describe('Program Server Actions', () => {
     airline: 'Saudia',
     seats_available: 40,
     status: 'draft' as const,
+    adult_commission: 15000,
+    child_commission: 8000,
+    flight_type: 'direct' as const,
+    child_price: 110000,
     hotels: [
       { city: 'مكة' as const, hotel_name: 'فندق مكة أنوار', stars: 4, distance_meters: 400, nights: 10, board_basis: 'فطور' },
       { city: 'المدينة' as const, hotel_name: 'فندق طيبة', stars: 4, distance_meters: 150, nights: 4, board_basis: 'فطور' }

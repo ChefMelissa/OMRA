@@ -36,6 +36,7 @@ export default function CitizenProgramSearch({ initialPrograms }: CitizenProgram
   const [maxPrice, setMaxPrice] = useState<number>(1000000)
   const [selectedAirline, setSelectedAirline] = useState<string>('all')
   const [selectedRoomType, setSelectedRoomType] = useState<string>('all')
+  const [flightType, setFlightType] = useState<string>('all')
 
   // Applied states used for actual query filtering (initially empty to show all)
   const [appliedCity, setAppliedCity] = useState('all')
@@ -49,6 +50,7 @@ export default function CitizenProgramSearch({ initialPrograms }: CitizenProgram
   const [appliedMaxPrice, setAppliedMaxPrice] = useState<number>(1000000)
   const [appliedAirline, setAppliedAirline] = useState<string>('all')
   const [appliedRoomType, setAppliedRoomType] = useState<string>('all')
+  const [appliedFlightType, setAppliedFlightType] = useState<string>('all')
 
   const ALGERIAN_MONTHS = [
     'جانفي / يناير', 'فيفري / فبراير', 'مارس', 'أفريل / أبريل', 'ماي / مايو', 'جوان / يونيو',
@@ -127,6 +129,7 @@ export default function CitizenProgramSearch({ initialPrograms }: CitizenProgram
     setAppliedMaxPrice(maxPrice)
     setAppliedAirline(selectedAirline)
     setAppliedRoomType(selectedRoomType)
+    setAppliedFlightType(flightType)
     setCalendarOpen(false)
   }
 
@@ -196,7 +199,10 @@ export default function CitizenProgramSearch({ initialPrograms }: CitizenProgram
     // Room Type
     const matchesRoom = appliedRoomType === 'all' || p.room_prices?.some((pr: any) => pr.room_type === appliedRoomType)
 
-    return matchesCity && matchesDate && matchesDistance && matchesDuration && matchesPrice && matchesAirline && matchesRoom
+    // Flight Type
+    const matchesFlightType = appliedFlightType === 'all' || p.flight_type === appliedFlightType
+
+    return matchesCity && matchesDate && matchesDistance && matchesDuration && matchesPrice && matchesAirline && matchesRoom && matchesFlightType
   })
 
   // Sorted Programs
@@ -519,6 +525,20 @@ export default function CitizenProgramSearch({ initialPrograms }: CitizenProgram
                 {uniqueAirlines.map(airline => (
                   <option key={airline} value={airline}>{airline}</option>
                 ))}
+              </select>
+            </div>
+
+            {/* Flight Type */}
+            <div className="space-y-2">
+              <label className="block text-xs font-bold text-foreground">نوع الرحلة</label>
+              <select
+                value={flightType}
+                onChange={(e) => setFlightType(e.target.value)}
+                className="w-full px-3 py-2.5 border border-card-border rounded-xl bg-card text-xs focus:ring-primary"
+              >
+                <option value="all">كل أنواع الرحلات</option>
+                <option value="direct">✨ رحلات مباشرة</option>
+                <option value="transit">✈️ رحلات ترانزيت</option>
               </select>
             </div>
 

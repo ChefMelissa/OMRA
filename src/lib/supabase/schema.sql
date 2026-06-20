@@ -46,6 +46,8 @@ create table public.programs (
     airline text not null,
     seats_available integer not null default 0 check (seats_available >= 0),
     status text not null check (status in ('draft', 'active', 'closed')) default 'draft',
+    adult_commission numeric(12, 2) not null default 0.00 check (adult_commission >= 0),
+    child_commission numeric(12, 2) not null default 0.00 check (child_commission >= 0),
     created_at timestamp with time zone default timezone('utc'::text, now()) not null,
     updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
     constraint departure_before_return check (departure_date <= return_date)
@@ -100,6 +102,8 @@ create table public.booking_requests (
     customer_phone text not null,
     is_whatsapp boolean not null default false,
     room_type text not null check (room_type in ('ثنائية', 'ثلاثية', 'رباعية', 'خماسية')),
+    adults_count integer not null default 1 check (adults_count >= 1),
+    children_count integer not null default 0 check (children_count >= 0),
     notes text,
     status text not null check (status in ('new', 'contacted', 'booked', 'cancelled')) default 'new',
     booking_value numeric(12, 2) check (booking_value >= 0),
