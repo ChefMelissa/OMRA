@@ -230,7 +230,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                   ))}
                   <div className="flex justify-between items-center p-4 hover:bg-muted-bg/10 transition-colors bg-secondary/5 border-t border-dashed border-card-border">
                     <div className="flex flex-col">
-                      <span className="font-bold text-sm text-foreground">سعر الطفل (تذكرة + تأشيرة بدون سرير)</span>
+                      <span className="font-bold text-sm text-foreground">سعر الطفل (شامل التذكرة، التأشيرة والسرير)</span>
                       <span className="text-[10px] text-muted-text">تسعيرة الأطفال المعتمدة للرحلة</span>
                     </div>
                     <span className="font-black text-md text-secondary">

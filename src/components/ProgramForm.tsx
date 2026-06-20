@@ -554,7 +554,7 @@ export default function ProgramForm({ initialProgram }: ProgramFormProps) {
                 <h4 className="font-bold text-sm text-foreground">تسعيرة الأطفال (خاص بسوق الجزائر)</h4>
               </div>
               <p className="text-xs text-muted-text">
-                أدخل تكلفة السفر التقريبية للطفل الواحد بالدينار الجزائري (تشمل عادة التأشيرة والتذكرة دون سرير مستقل).
+                أدخل تكلفة السفر المخفضة للطفل الواحد بالدينار الجزائري (تشمل التذكرة، التأشيرة وسريراً في الفندق).
               </p>
               <div>
                 <label className="block text-xs font-semibold text-foreground mb-1">سعر الطفل (دج) *</label>
