@@ -315,9 +315,6 @@ export default async function ProgramDetailPage({ params }: PageProps) {
         <div className="space-y-6">
           <div className="bg-card border border-card-border p-6 rounded-3xl shadow-lg sticky top-24 space-y-6">
             <div className="space-y-2">
-              <span className="text-[10px] font-bold text-secondary uppercase bg-secondary-light dark:bg-secondary-light/10 px-2.5 py-1 rounded-lg">
-                بدون دفع مسبق أو عربون
-              </span>
               <h2 className="text-lg font-black text-foreground">طلب حجز مباشر</h2>
               <p className="text-xs text-muted-text leading-relaxed">
                 سجل اسمك ورقم هاتفك هنا لإرسال طلب حجزك. سيتم حفظ البيانات والاتصال بك للتأكيد في غضون 24 ساعة.
@@ -343,7 +340,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
               </div>
               <div className="flex gap-2">
                 <Info className="h-5 w-5 text-primary shrink-0" />
-                <span><strong>لا عربون:</strong> لن تدفع أي مبالغ مالية عبر الإنترنت؛ الدفع والتسويات تتم مباشرة في مقر الوكالة.</span>
+                <span><strong>معلومات الدفع وتأكيد الحجز:</strong> تتواصل معك الوكالة مباشرة بعد تقديم طلبك للاتفاق على كيفية الدفع وتدبير الملف (عبر الهاتف، واتساب، أو الحضور لمقر الوكالة).</span>
               </div>
             </div>
           </div>
