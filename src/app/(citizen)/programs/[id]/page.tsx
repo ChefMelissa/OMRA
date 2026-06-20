@@ -278,15 +278,10 @@ export default async function ProgramDetailPage({ params }: PageProps) {
               </div>
 
               <div className="p-4 border border-card-border rounded-xl space-y-2 bg-muted-bg/10">
-                <span className="text-[10px] text-muted-text font-bold block">الحساب البريدي الجاري (CCP) للدفع</span>
-                {(program.agency as any)?.ccp_number ? (
-                  <div className="space-y-1 text-xs">
-                    <p className="font-mono font-bold text-primary">{(program.agency as any).ccp_number}</p>
-                    <p className="text-muted-text">صاحب الحساب: <span className="text-foreground font-bold">{(program.agency as any).ccp_holder}</span></p>
-                  </div>
-                ) : (
-                  <p className="text-xs text-muted-text">تتواصل معك الوكالة مباشرة لإرسال تفاصيل حساب الـ CCP لإتمام الدفع.</p>
-                )}
+                <span className="text-[10px] text-muted-text font-bold block">معلومات الدفع وتأكيد الحجز</span>
+                <p className="text-xs text-muted-text leading-relaxed">
+                  تتواصل معك الوكالة مباشرة بعد تقديم طلبك للاتفاق على كيفية الدفع وتدبير الملف (عبر الهاتف، واتساب، أو الحضور لمقر الوكالة).
+                </p>
               </div>
             </div>
 
@@ -325,7 +320,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
               </span>
               <h2 className="text-lg font-black text-foreground">طلب حجز مباشر</h2>
               <p className="text-xs text-muted-text leading-relaxed">
-                سجل اسمك ورقم هاتفك هنا مجاناً. سيتم حفظ بيانات الحجز والاتصال بك للتأكيد في غضون 24 ساعة.
+                سجل اسمك ورقم هاتفك هنا لإرسال طلب حجزك. سيتم حفظ البيانات والاتصال بك للتأكيد في غضون 24 ساعة.
               </p>
             </div>
 

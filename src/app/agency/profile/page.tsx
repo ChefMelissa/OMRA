@@ -195,36 +195,6 @@ export default function AgencyProfilePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="ccpNumber" className="block text-sm font-semibold text-foreground mb-1">
-                رقم الحساب البريدي الجاري (CCP) للدفع
-              </label>
-              <input
-                id="ccpNumber"
-                name="ccpNumber"
-                type="text"
-                defaultValue={agencyData.ccp_number || ''}
-                placeholder="مثال: 0022345678"
-                className="w-full px-3 py-3 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary text-left"
-                dir="ltr"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="ccpHolder" className="block text-sm font-semibold text-foreground mb-1">
-                الاسم الكامل لصاحب حساب الـ CCP
-              </label>
-              <input
-                id="ccpHolder"
-                name="ccpHolder"
-                type="text"
-                defaultValue={agencyData.ccp_holder || ''}
-                placeholder="مثال: محمد بن علي"
-                className="w-full px-3 py-3 border border-card-border rounded-xl bg-transparent text-sm focus:ring-primary focus:border-primary"
-              />
-            </div>
-          </div>
 
           <div>
             <label htmlFor="branches" className="block text-sm font-semibold text-foreground mb-1">

@@ -315,8 +315,8 @@ export default function BookingModal({ program, isOpen, onClose }: BookingModalP
             <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30 text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
               <span className="font-extrabold block mb-1">💸 طريقة دفع رسوم الرحلة:</span>
               <p>
-                لا تطلب منك منصة "عمرة" أي تفاصيل أو دفع إلكتروني بالبطاقة. الحجز هنا هو **طلب تأكيد مجاني**. 
-                سوف تتصل بك الوكالة مباشرة بعد تقديم الطلب للاتفاق على كيفية الدفع وتدبير الملف ( CCP أو نقداً في مكتبهم).
+                لا تطلب منك منصة "عمرة" أي تفاصيل أو دفع إلكتروني بالبطاقة. الحجز هنا هو **طلب تأكيد وحجز أولي غير ملزم مالياً في هذه المرحلة**. 
+                سوف تتصل بك الوكالة مباشرة بعد تقديم الطلب للاتفاق على كيفية الدفع وتدبير الملف (عبر الهاتف، واتساب، أو الحضور لمقر الوكالة).
               </p>
             </div>
 

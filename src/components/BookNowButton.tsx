@@ -19,7 +19,7 @@ export default function BookNowButton({ program }: { program: any }) {
         onClick={handleOpen}
         className="w-full py-4 px-6 bg-primary hover:bg-primary-hover text-white text-md font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 text-center cursor-pointer"
       >
-        اطلب حجز مكانك الآن (مجاناً)
+        اطلب حجز مكانك الآن
       </button>
 
       <BookingModal
