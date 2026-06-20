@@ -49,6 +49,21 @@ export default function BookingModal({ program, isOpen, onClose }: BookingModalP
       return
     }
 
+    const maxCapacity = {
+      'ثنائية': 2,
+      'ثلاثية': 3,
+      'رباعية': 4,
+      'خماسية': 5
+    }[roomType] || 2
+
+    const totalTravellers = adultsCount + childrenCount
+
+    if (totalTravellers > maxCapacity) {
+      setError(`عدد الأشخاص المطلوب (${totalTravellers} أشخاص) يتجاوز سعة الغرفة الـ ${roomType} (تتسع لـ ${maxCapacity} أشخاص كحد أقصى). يرجى اختيار نوع غرفة أكبر أو تقليل عدد الأشخاص.`)
+      setLoading(false)
+      return
+    }
+
     const payload = {
       program_id: program.id,
       customer_name: customerName,
@@ -268,6 +283,29 @@ export default function BookingModal({ program, isOpen, onClose }: BookingModalP
                   />
                 </div>
               </div>
+
+              {/* Capacity Warning */}
+              {(() => {
+                const maxCapacity = {
+                  'ثنائية': 2,
+                  'ثلاثية': 3,
+                  'رباعية': 4,
+                  'خماسية': 5
+                }[roomType] || 2
+                const total = adultsCount + childrenCount
+                if (total <= maxCapacity) return null
+                return (
+                  <div className="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 text-xs text-red-700 dark:text-red-400 flex items-start gap-2.5 animate-fade-in">
+                    <ShieldAlert className="h-5 w-5 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-extrabold block mb-0.5">⚠️ تنبيه السعة الاستيعابية:</span>
+                      <p className="leading-relaxed">
+                        الغرفة الـ{roomType} تتسع لـ {maxCapacity} أشخاص كحد أقصى. مجموع المسافرين الحالي (البالغين والأطفال) هو {total} أشخاص. يرجى اختيار نوع غرفة أكبر أو تقليل عدد الأشخاص.
+                      </p>
+                    </div>
+                  </div>
+                )
+              })()}
 
               {/* Live Price Estimation */}
               {(() => {
